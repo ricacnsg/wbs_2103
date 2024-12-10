@@ -129,7 +129,7 @@ public class Client {
     } catch (SQLException e) {
         e.printStackTrace();
     }
-    return null; // Return null if insertion fails
+    return null;
     }
 
 
@@ -228,7 +228,6 @@ public class Client {
     }
 
     public void updateCurrentReading(int meterID, double currentReading) {
-        // Update the current reading in the database
         String query = "UPDATE Meter SET currentReading = ? WHERE meterID = ?";
         try (PreparedStatement stmt = connect.prepareStatement(query)) {
             stmt.setDouble(1, currentReading);
@@ -293,7 +292,7 @@ public class Client {
         String query = "SELECT previousReading, currentReading FROM Submeter WHERE submeterID = ?";
 
         try (PreparedStatement stmt = connect.prepareStatement(query)) {
-            stmt.setInt(1, meterID); // Set the meterID parameter
+            stmt.setInt(1, meterID); 
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -338,7 +337,7 @@ public class Client {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null; // Return null if submeter name is not found
+        return null;
     }
     
     public int getSubmeterIDByName(int meterID, String submeterName) {
@@ -354,7 +353,7 @@ public class Client {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1; // Return -1 if no submeter found with the name
+        return -1;
     }
 
     public void addSubmeter(int meterID, String meterName) {
@@ -388,7 +387,6 @@ public class Client {
     }
     
     public void updateSubCurrentReading(int submeterID, double currentReading) {
-        // Update the current reading in the database
         String query = "UPDATE Submeter SET currentReading = ? WHERE submeterID = ?";
         try (PreparedStatement stmt = connect.prepareStatement(query)) {
             stmt.setDouble(1, currentReading);
@@ -399,13 +397,11 @@ public class Client {
         }
     }
     
-    // Method to sum up submeter readings and update the main meter's current reading
     public boolean updateMainMeterReading(int mainMeterID) {
         String sumQuery = "SELECT SUM(currentReading) AS totalSubmeterReading FROM Submeter WHERE primaryMeterID = ?";
         String updateQuery = "UPDATE Meter SET currentReading = ? WHERE meterID = ?";
 
         try (PreparedStatement sumStmt = connect.prepareStatement(sumQuery)) {
-            // Step 1: Calculate total submeter readings
             sumStmt.setInt(1, mainMeterID);
             double totalSubmeterReading = 0;
             try (ResultSet rs = sumStmt.executeQuery()) {
@@ -414,17 +410,16 @@ public class Client {
                 }
             }
 
-            // Step 2: Update main meter's current reading with the total
             try (PreparedStatement updateStmt = connect.prepareStatement(updateQuery)) {
                 updateStmt.setDouble(1, totalSubmeterReading);
                 updateStmt.setInt(2, mainMeterID);
                 int rowsUpdated = updateStmt.executeUpdate();
-                return rowsUpdated > 0; // Return true if the update was successful
+                return rowsUpdated > 0; 
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false; // Return false if the process failed
+        return false;
     }
 
 
