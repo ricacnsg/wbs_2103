@@ -184,9 +184,22 @@ private void handleLogin() {
         SharedData.clientID = clientID;
 
         String meterType = client.getMeterType(clientID);
-
-        ClientDashboard dashboard = new ClientDashboard();
-        dashboard.setVisible(true);
+        SharedData.meterID = client.getMeterID(clientID);
+        
+                
+        if (meterType.equals("Residential")) {
+            ClientResidential residential = new ClientResidential();
+            residential.setVisible(true);
+        } else if (meterType.equals("Commercial")) {
+            ClientCommercial commercial = new ClientCommercial();
+            commercial.setVisible(true);
+        } else if (meterType.equals("Bulk")) {
+            ClientBulk bulk = new ClientBulk();
+            bulk.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Unknown meter type!", "Error", JOptionPane.ERROR_MESSAGE);
+            dispose();
+        }
 
         this.dispose();
     } else {

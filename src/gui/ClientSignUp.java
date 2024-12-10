@@ -16,11 +16,15 @@ public class ClientSignUp extends javax.swing.JFrame {
     Client client = new Client();
     private String meterType = "";
     private int meterCount = 0;
+    private int submeterCount = 0;
     private List<String> comMeterNames;
+    private List<String> bulkSubmeterNames;
+    private String primaryMeterName;
     
     public ClientSignUp() {
         initComponents();
        comMeterNames = new ArrayList<>(); 
+       bulkSubmeterNames = new ArrayList<>();
     }
 
     /**
@@ -54,7 +58,7 @@ public class ClientSignUp extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         selectMeterType = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        submeternameField = new javax.swing.JTextField();
         submetersSummary = new javax.swing.JLabel();
         totalSubmeters = new javax.swing.JLabel();
         addSubmeterButton = new javax.swing.JButton();
@@ -197,7 +201,7 @@ public class ClientSignUp extends javax.swing.JFrame {
                         .addGap(50, 50, 50)
                         .addComponent(meternameField, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(200, 200, 200)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(submeternameField, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addComponent(totalMeterLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -267,7 +271,7 @@ public class ClientSignUp extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(meternameField, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(submeternameField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(totalMeterLabel)
@@ -303,15 +307,60 @@ public class ClientSignUp extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void selectMeterTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectMeterTypeActionPerformed
+        String meterType = (String) selectMeterType.getSelectedItem();
 
+        if (meterType.equals("Residential")) {
+            meternameField.setEnabled(false);
+            addmeterButton.setEnabled(false);
+            submeternameField.setEnabled(false);
+            addSubmeterButton.setEnabled(false);
+        } else if (meterType.equals("Commercial")) {
+            meternameField.setEnabled(true);
+            addmeterButton.setEnabled(true);
+            submeternameField.setEnabled(false);
+            addSubmeterButton.setEnabled(false);
+        } else if (meterType.equals("Bulk")) {
+            meternameField.setEnabled(false);  // Primary meter
+            addmeterButton.setEnabled(false);
+            submeternameField.setEnabled(true);  // Submeters
+            addSubmeterButton.setEnabled(true);
+        }
     }//GEN-LAST:event_selectMeterTypeActionPerformed
 
     private void addmeterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addmeterButtonActionPerformed
+        String meterType = (String) selectMeterType.getSelectedItem();
+        String meterName = meternameField.getText().trim();
+
+        if (meterType.equals("Commercial")) {
+            if (!meterName.isEmpty()) {
+                comMeterNames.add(meterName);
+                meterCount++;
+                meternameField.setText("");
+                updateMeterSummary();
+            } else {
+                JOptionPane.showMessageDialog(this, "Meter name cannot be empty!");
+            }
+        } else if (meterType.equals("Bulk")) {
+            if (primaryMeterName == null) {
+                primaryMeterName = meterName.isEmpty() ? "Main Meter" : meterName;
+                meternameField.setText("");
+                JOptionPane.showMessageDialog(this, "Primary meter set as: " + primaryMeterName);
+            } else {
+                if (!meterName.isEmpty()) {
+                    bulkSubmeterNames.add(meterName);
+                    meterCount++;
+                    meternameField.setText("");
+                    updateMeterSummary();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Submeter name cannot be empty!");
+                }
+            }
+        }
 
     }//GEN-LAST:event_addmeterButtonActionPerformed
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
-        
+        handleSubmit();
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void meternameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_meternameFieldActionPerformed
@@ -319,16 +368,134 @@ public class ClientSignUp extends javax.swing.JFrame {
     }//GEN-LAST:event_meternameFieldActionPerformed
 
     private void addSubmeterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSubmeterButtonActionPerformed
-        
+        String submeterName = submeternameField.getText();
+
+        if (!submeterName.isEmpty()) {
+            bulkSubmeterNames.add(submeterName); // Save to the list of submeters
+            submeterCount++;
+            submeternameField.setText("");
+            updateSubmeterSummary();
+        } else {
+            JOptionPane.showMessageDialog(this, "Submeter name cannot be empty!");
+        }
     }//GEN-LAST:event_addSubmeterButtonActionPerformed
 
     /**
      * @param args the command line arguments
      */
+    private void updateMeterSummary() {
+        totalMeterLabel.setText("Total Meters: " + meterCount);
+
+        StringBuilder summary = new StringBuilder("<html>Meter Summary:<br>");
+        for (String meter : comMeterNames) {
+            summary.append("- ").append(meter).append("<br>");
+        }
+        if (primaryMeterName != null) {
+            summary.append("- Primary Meter: ").append(primaryMeterName).append("<br>");
+        }
+        for (String submeter : bulkSubmeterNames) {
+            summary.append("- Submeter: ").append(submeter).append("<br>");
+        }
+        summary.append("</html>");
+
+        meterSummaryLabel.setText(summary.toString());
+    }
+   
+    private void updateSubmeterSummary() {
+        StringBuilder summary = new StringBuilder("<html>Submeter Summary:<br>");
+        for (String submeterName : bulkSubmeterNames) {
+            summary.append("- ").append(submeterName).append("<br>");
+        }
+        summary.append("</html>");
+
+        submetersSummary.setText(summary.toString()); // Update the JLabel for submeters
+    }
+
+
+    private void handleSubmit() {
+        String clientName = nameField.getText().trim();
+        String contactNumber = contactnoField.getText().trim();
+        String password = passField.getText().trim();
+        int addressID = selectLoc.getSelectedIndex() + 1;
+        String meterType = (String) selectMeterType.getSelectedItem();
+
+        if (clientName.isEmpty() || contactNumber.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "All fields are required!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Integer primaryMeterID = null; // Initialize primaryMeterID
+
+        if (meterType.equals("Bulk") && (primaryMeterName == null || primaryMeterName.isEmpty())) {
+            primaryMeterName = "Main Meter"; // Set default name if missing
+        }
+
+        // Insert the client first and retrieve clientID
+        int clientID = client.insertClient(clientName, contactNumber, password, addressID, meterType);
+
+        if (meterType.equals("Bulk")) {
+            // Insert the primary meter and retrieve its ID
+            primaryMeterID = client.insertMeter(clientID, primaryMeterName, "Primary");
+            if (primaryMeterID == null) {
+                JOptionPane.showMessageDialog(this, "Failed to insert primary meter.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Stop further processing
+            }
+
+            // Ensure at least one submeter is provided
+            if (bulkSubmeterNames.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "At least one submeter name is required for Bulk meters.", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Stop further processing
+            }
+
+            // Insert submeters using the retrieved primaryMeterID
+            for (String submeterName : bulkSubmeterNames) {
+                client.insertSubmeter(primaryMeterID, submeterName);
+            }
+        }
+
+
+        if (meterType.equals("Residential")) {
+            client.insertMeter(clientID, "Default Meter", "Residential");
+        } else if (meterType.equals("Commercial")) {
+            if (comMeterNames.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "At least one meter name is required for Commercial meters.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            for (String meterName : comMeterNames) {
+                client.insertMeter(clientID, meterName, "Commercial");
+            }
+        }
+
+        JOptionPane.showMessageDialog(
+            this,
+            "Client added successfully!\nGenerated Client ID: " + clientID,
+            "Success",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+
+        clearForm();
+    }
+
+    private void clearForm() {
+        nameField.setText("");
+        contactnoField.setText("");
+        passField.setText("");
+        selectLoc.setSelectedIndex(0);
+        selectMeterType.setSelectedIndex(0);
+        meternameField.setText("");
+        comMeterNames.clear();
+        bulkSubmeterNames.clear();
+        meterCount = 0;
+        primaryMeterName = null;
+
+        updateMeterSummary();
+        updateSubmeterSummary();
+    }
 
 
 
-    
+
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -377,13 +544,13 @@ public class ClientSignUp extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel meterSummaryLabel;
     private javax.swing.JTextField meternameField;
     private javax.swing.JTextField nameField;
     private javax.swing.JTextField passField;
     private javax.swing.JComboBox<String> selectLoc;
     private javax.swing.JComboBox<String> selectMeterType;
+    private javax.swing.JTextField submeternameField;
     private javax.swing.JLabel submetersSummary;
     private javax.swing.JButton submitButton;
     private javax.swing.JLabel totalMeterLabel;
