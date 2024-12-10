@@ -10,7 +10,9 @@ import queries.Client;
 import queries.UserState;
 import queries.SharedData;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 /**
  *
  * @author Rica Mae
@@ -20,9 +22,9 @@ public class ClientCommercial extends javax.swing.JFrame {
     private static String meterType = "";
     private boolean isMeterRunning = false; 
     private Timer timer;  
-    private int meterID = SharedData.meterID; 
+    private int meterID;
     private DefaultListModel<String> meterList;
-
+    private Map<Integer, Timer> meterTimers = new HashMap<>();
     //private int loggedInUserID = UserState.verifiedID;
 
     /**
@@ -31,7 +33,7 @@ public class ClientCommercial extends javax.swing.JFrame {
     public ClientCommercial() {
         if (!UserState.isVerified) {
             JOptionPane.showMessageDialog(this, "You must log in first!", "Login Required", JOptionPane.WARNING_MESSAGE);
-            dispose();
+            this.dispose();
             return;
         }
         
@@ -142,31 +144,29 @@ public class ClientCommercial extends javax.swing.JFrame {
                     .addGroup(CommercialPanelLayout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(jSeparator2))
-                    .addGroup(CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(CommercialPanelLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(welcomeCommercial, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(CommercialPanelLayout.createSequentialGroup()
-                            .addGap(21, 21, 21)
-                            .addGroup(CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(switchCom)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(dateCom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(prevCom, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
-                                .addComponent(currentCom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(meterName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGap(277, 277, 277)
-                            .addComponent(scrollList, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(CommercialPanelLayout.createSequentialGroup()
-                                    .addGap(30, 30, 30)
-                                    .addGroup(CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(meterNameCom, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, CommercialPanelLayout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(addmeterCom)
-                                    .addGap(26, 26, 26))))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, CommercialPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(welcomeCommercial, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 271, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, CommercialPanelLayout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(switchCom)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dateCom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(prevCom, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                            .addComponent(currentCom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(meterName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(scrollList, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(meterNameCom, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, CommercialPanelLayout.createSequentialGroup()
+                                .addGap(39, 39, 39)
+                                .addComponent(addmeterCom)
+                                .addGap(26, 26, 26)))))
                 .addGap(24, 24, 24))
         );
         CommercialPanelLayout.setVerticalGroup(
@@ -176,31 +176,33 @@ public class ClientCommercial extends javax.swing.JFrame {
                 .addComponent(welcomeCommercial, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(CommercialPanelLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
-                        .addGap(12, 12, 12)
-                        .addComponent(dateCom, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(meterName, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(prevCom, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(currentCom, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(switchCom))
-                    .addGroup(CommercialPanelLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
                         .addGroup(CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(scrollList, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(CommercialPanelLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3)
+                                .addGap(12, 12, 12)
+                                .addComponent(dateCom, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(meterName, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(prevCom, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(currentCom, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(switchCom))
+                            .addGroup(CommercialPanelLayout.createSequentialGroup()
+                                .addGap(30, 30, 30)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(meterNameCom, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(addmeterCom, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(26, 26, 26)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(259, Short.MAX_VALUE))
+                                .addComponent(addmeterCom, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(71, 71, 71)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(CommercialPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(scrollList, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(220, Short.MAX_VALUE))
         );
 
         switchCom.setEnabled(false);
@@ -237,7 +239,7 @@ public class ClientCommercial extends javax.swing.JFrame {
             .addGroup(sidePanelLayout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 465, Short.MAX_VALUE)
                 .addComponent(logoutClient, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34))
         );
@@ -249,17 +251,14 @@ public class ClientCommercial extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(sidePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 732, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 738, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(tabbedPane))
-                    .addComponent(sidePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(sidePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tabbedPane))
                 .addContainerGap())
         );
 
@@ -296,44 +295,60 @@ public class ClientCommercial extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutClientActionPerformed
 
     private void listComValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listComValueChanged
-        if (!evt.getValueIsAdjusting()) { 
-            String selectedMeterName = listCom.getSelectedValue();
-            if (selectedMeterName != null) {
-                int clientID = SharedData.clientID;
-                int meterID = client.getMeterIDByMeterName(clientID, selectedMeterName);
+    if (!evt.getValueIsAdjusting()) { 
+        String selectedMeterName = listCom.getSelectedValue();
+        if (selectedMeterName != null) {
+            int clientID = SharedData.clientID;
+            int meterID = client.getMeterIDByMeterName(clientID, selectedMeterName);
 
-                if (meterID > 0) { 
-                    double[] readings = client.getMeterReadings(meterID);
-                    
-                    dateCom.setText("Date Today: " + LocalDate.now().toString());
-                    meterName.setText("Meter Name: " + selectedMeterName);
-                    prevCom.setText("Previous Reading: " + readings[0]);
-                    currentCom.setText("Current Reading: " + readings[1]);
-                    
-                    switchCom.setEnabled(true);
+            if (meterID > 0) { 
+                double[] readings = client.getMeterReadings(meterID);
+                
+                dateCom.setText("Date Today: " + LocalDate.now().toString());
+                meterName.setText("Meter Name: " + selectedMeterName);
+                prevCom.setText("Previous Reading: " + readings[0]);
+                currentCom.setText("Current Reading: " + readings[1]);
+                
+                // Update the switchCom button text
+                if (meterTimers.containsKey(meterID)) {
+                    switchCom.setText("Stop Meter");
                 } else {
-                    JOptionPane.showMessageDialog(this, "Meter ID not found for selected meter name.", "Error", JOptionPane.ERROR_MESSAGE);
+                    switchCom.setText("Start Meter");
                 }
+                switchCom.setEnabled(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Meter ID not found for selected meter name.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
     }//GEN-LAST:event_listComValueChanged
 
     private void switchComActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchComActionPerformed
-        // TODO add your handling code here:
-        if (listCom.getSelectedValue() == null) {
-            JOptionPane.showMessageDialog(null, "Please select a meter first!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+    if (listCom.getSelectedValue() == null) {
+        JOptionPane.showMessageDialog(this, "Please select a meter first!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-        if (switchCom.isSelected()) {
-            switchCom.setText("METER RUNNING");
-            isMeterRunning = true;
-            startMeter(); 
-        } else {
-            switchCom.setText("METER STOPPED");
-            isMeterRunning = false;
-            stopMeter(); 
-        }
+    String selectedMeter = listCom.getSelectedValue();
+    int selectedMeterID = client.getMeterIDByMeterName(SharedData.clientID, selectedMeter);
+
+    if (selectedMeterID <= 0) {
+        JOptionPane.showMessageDialog(this, "Error retrieving meter ID!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Check the current state of the meter
+    if (meterTimers.containsKey(selectedMeterID)) { 
+        // If the timer exists, the meter is running; stop it
+        stopMeter(selectedMeterID);
+        switchCom.setText("Start Meter");
+        JOptionPane.showMessageDialog(this, "Meter stopped!", "Info", JOptionPane.INFORMATION_MESSAGE);
+    } else {
+        // If no timer exists, the meter is not running; start it
+        startMeter(selectedMeterID);
+        switchCom.setText("Stop Meter");
+        JOptionPane.showMessageDialog(this, "Meter started!", "Info", JOptionPane.INFORMATION_MESSAGE);
+    }
     }//GEN-LAST:event_switchComActionPerformed
 
     /**
@@ -355,43 +370,33 @@ public class ClientCommercial extends javax.swing.JFrame {
         loadMeterList(); 
     }
     
-    private void startMeter() {
-        if (listCom.getSelectedValue() == null) {
-            JOptionPane.showMessageDialog(this, "Please select a meter first!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+private void startMeter(int meterID) {
+    if (meterTimers.containsKey(meterID)) {
+        JOptionPane.showMessageDialog(this, "This meter is already running!", "Info", JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
 
-        isMeterRunning = true;
-        switchCom.setText("Stop Meter");
+    Timer timer = new Timer(1000, event -> {
+        double[] readings = client.getMeterReadings(meterID);
+        readings[1] += 0.5; 
+        client.updateCurrentReading(meterID, readings[1]); 
 
-        String selectedMeter = listCom.getSelectedValue();
-        int selectedMeterID = client.getMeterIDByMeterName(SharedData.clientID, selectedMeter);
-
-        if (selectedMeterID > 0) {
-            meterID = selectedMeterID;
-        } else {
-            JOptionPane.showMessageDialog(this, "Error retrieving meter ID!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        timer = new Timer(1000, event -> {
-            double[] readings = client.getMeterReadings(meterID);
-            readings[1] += 0.5; 
-            client.updateCurrentReading(meterID, readings[1]); 
-
+        if (listCom.getSelectedValue() != null && client.getMeterIDByMeterName(SharedData.clientID, listCom.getSelectedValue()) == meterID) {
             currentCom.setText("Current Reading: " + readings[1]);
-        });
-        timer.start();
-    }
-
-
-    private void stopMeter() {
-        isMeterRunning = false;
-        switchCom.setText("Start Meter");
-        if (timer != null) {
-            timer.stop();
         }
+    });
+    timer.start();
+    meterTimers.put(meterID, timer); // Add the timer to the Map
+}
+
+
+private void stopMeter(int meterID) {
+    Timer timer = meterTimers.get(meterID);
+    if (timer != null) {
+        timer.stop();
+        meterTimers.remove(meterID); // Remove the timer from the Map
     }
+}
 
 
     public static void main(String args[]) {

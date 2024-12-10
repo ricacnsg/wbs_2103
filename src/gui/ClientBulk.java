@@ -10,7 +10,9 @@ import queries.Client;
 import queries.UserState;
 import queries.SharedData;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 /**
  *
  * @author Rica Mae
@@ -20,9 +22,12 @@ public class ClientBulk extends javax.swing.JFrame {
     private static String meterType = "";
     private boolean isMeterRunning = false; 
     private Timer timer;  
-    private int meterID = SharedData.meterID; 
+    private int meterID;
     private DefaultListModel<String> meterList;
     private int submeterID;
+    private Map<Integer, Timer> submeterTimers = new HashMap<>();
+    private Map<Integer, Boolean> submeterStates = new HashMap<>();
+
 
     /**
      * Creates new form ClientBulk
@@ -30,7 +35,7 @@ public class ClientBulk extends javax.swing.JFrame {
     public ClientBulk() {
         if (!UserState.isVerified) {
             JOptionPane.showMessageDialog(this, "You must log in first!", "Login Required", JOptionPane.WARNING_MESSAGE);
-            dispose();
+            this.dispose();
             return;
         }
         
@@ -73,6 +78,9 @@ public class ClientBulk extends javax.swing.JFrame {
         mainMeterLabel = new javax.swing.JLabel();
         prevMain = new javax.swing.JLabel();
         currentMain = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        logoutButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(901, 597));
@@ -247,17 +255,55 @@ public class ClientBulk extends javax.swing.JFrame {
 
         tabbedPane.addTab("BULK", BulkPane);
 
+        jPanel1.setBackground(new java.awt.Color(0, 153, 153));
+
+        jLabel1.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
+        jLabel1.setText("CLIENT DASHBOARD");
+
+        logoutButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        logoutButton.setText("LOG OUT");
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 162, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 732, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(tabbedPane)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -277,39 +323,51 @@ public class ClientBulk extends javax.swing.JFrame {
 
     private void switchComActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchComActionPerformed
         if (submeterList.getSelectedValue() == null) {
-            JOptionPane.showMessageDialog(null, "Please select a meter first!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select a submeter first!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        if (switchCom.isSelected()) {
-            switchCom.setText("METER RUNNING");
-            isMeterRunning = true;
-            startMeter(); 
+        String selectedSubmeter = submeterList.getSelectedValue();
+
+        int selectedSubmeterID = client.getSubmeterIDByName(meterID, selectedSubmeter);
+
+        if (selectedSubmeterID <= 0) {
+            JOptionPane.showMessageDialog(this, "Error retrieving submeter ID!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (submeterTimers.containsKey(selectedSubmeterID)) { 
+            stopSubmeter(selectedSubmeterID);
+            switchCom.setText("Start Submeter");
+            JOptionPane.showMessageDialog(this, "Submeter stopped!", "Info", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            switchCom.setText("METER STOPPED");
-            isMeterRunning = false;
-            stopMeter(); 
+            startSubmeter(selectedSubmeterID);
+            switchCom.setText("Stop Submeter");
+            JOptionPane.showMessageDialog(this, "Submeter started!", "Info", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_switchComActionPerformed
 
     private void submeterListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_submeterListValueChanged
         if (!evt.getValueIsAdjusting()) { 
-            String selectedSubmeterName = submeterList.getSelectedValue(); // Get selected submeter name
+            String selectedSubmeterName = submeterList.getSelectedValue(); 
             if (selectedSubmeterName != null) {
-                int clientID = SharedData.clientID;
-                int submeterID = client.getSubmeterIDByName(meterID, selectedSubmeterName); // Get submeter ID
+                int submeterID = client.getSubmeterIDByName(meterID, selectedSubmeterName); // Fetch submeter ID using clientID and submeter name
 
-                if (submeterID > 0) {
-                    // Get meter readings for the selected submeter
+                if (submeterID > 0) { 
                     double[] readings = client.getSubmeterReadings(submeterID);
 
-                    submetername.setText("Meter Name: " + selectedSubmeterName); // Display submeter name
-                    prevSub.setText("Previous Reading: " + readings[0]); // Display previous reading
-                    currentSub.setText("Current Reading: " + readings[1]); // Display current reading
+                    submetername.setText("Submeter Name: " + selectedSubmeterName); 
+                    prevSub.setText("Previous Reading: " + readings[0]); 
+                    currentSub.setText("Current Reading: " + readings[1]); 
 
-                    switchCom.setEnabled(true); // Enable the toggle button
+                    if (submeterTimers.containsKey(submeterID)) {
+                        switchCom.setText("Stop Submeter");
+                    } else {
+                        switchCom.setText("Start Submeter");
+                    }
+                    switchCom.setEnabled(true);
                 } else {
-                    JOptionPane.showMessageDialog(this, "Submeter ID not found for selected submeter.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Submeter ID not found for the selected submeter.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -322,6 +380,16 @@ public class ClientBulk extends javax.swing.JFrame {
         welcomeBulk.setText("Welcome, " + clientName + "!");
         loadMeterReadings(meterID);
     }//GEN-LAST:event_tabbedPaneStateChanged
+
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
+        SharedData.clientID = 0;
+        UserState.verifiedID = -1;
+        UserState.isVerified = false;
+
+        ClientSignIn clientsn = new ClientSignIn();
+        clientsn.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_logoutButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -355,44 +423,41 @@ public class ClientBulk extends javax.swing.JFrame {
         }
     }
     
-    private void startMeter() {
-        if (submeterList.getSelectedValue() == null) {
-            JOptionPane.showMessageDialog(this, "Please select a meter first!", "Error", JOptionPane.ERROR_MESSAGE);
+    private void startSubmeter(int submeterID) {
+        if (submeterTimers.containsKey(submeterID)) {
+            JOptionPane.showMessageDialog(this, "This submeter is already running!", "Info", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
-        isMeterRunning = true;
-        switchCom.setText("Stop Meter");
-
-        String selectedMeter = submeterList.getSelectedValue();
-        int selectedMeterID = client.getSubmeterIDByName(meterID, selectedMeter);
-
-        if (selectedMeterID > 0) {
-            submeterID = selectedMeterID;
-        } else {
-            JOptionPane.showMessageDialog(this, "Error retrieving meter ID!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        timer = new Timer(1000, event -> {
+        Timer timer = new Timer(1000, event -> {
             double[] readings = client.getSubmeterReadings(submeterID);
-            readings[1] += 0.5; 
+            readings[1] += 0.5;
             client.updateSubCurrentReading(submeterID, readings[1]); 
+
             client.updateMainMeterReading(meterID);
 
-            currentSub.setText("Current Reading: " + readings[1]);
+            if (submeterList.getSelectedValue() != null && 
+                client.getSubmeterIDByName(meterID, submeterList.getSelectedValue()) == submeterID) {
+                currentSub.setText("Current Reading: " + readings[1]);
+            }
         });
+
         timer.start();
+        submeterTimers.put(submeterID, timer); 
+        submeterStates.put(submeterID, true); 
+        switchCom.setText("Stop Meter");
     }
 
-
-    private void stopMeter() {
-        isMeterRunning = false;
-        switchCom.setText("Start Meter");
+    private void stopSubmeter(int submeterID) {
+        Timer timer = submeterTimers.get(submeterID); 
         if (timer != null) {
             timer.stop();
+            submeterTimers.remove(submeterID); 
+            submeterStates.put(submeterID, false); 
+            switchCom.setText("Start Meter");
         }
     }
+
 
     
     
@@ -434,9 +499,12 @@ public class ClientBulk extends javax.swing.JFrame {
     private javax.swing.JLabel currentMain;
     private javax.swing.JLabel currentSub;
     private javax.swing.JLabel dateBulk;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JButton logoutButton;
     private javax.swing.JLabel mainMeterLabel;
     private javax.swing.JLabel prevMain;
     private javax.swing.JLabel prevSub;
