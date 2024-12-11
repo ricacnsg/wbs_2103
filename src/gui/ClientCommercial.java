@@ -56,7 +56,7 @@ public class ClientCommercial extends javax.swing.JFrame {
     private void initComponents() {
 
         tabbedPane = new javax.swing.JTabbedPane();
-        CommercialPanel = new javax.swing.JPanel();
+        paymethodCom = new javax.swing.JPanel();
         welcomeCommercial = new javax.swing.JLabel();
         meterNameCom = new javax.swing.JTextField();
         addmeterCom = new javax.swing.JButton();
@@ -71,6 +71,12 @@ public class ClientCommercial extends javax.swing.JFrame {
         scrollList = new javax.swing.JScrollPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         listCom = new javax.swing.JList<>();
+        billCom = new javax.swing.JLabel();
+        paybutton = new javax.swing.JButton();
+        paymentCom = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
         sidePanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         logoutClient = new javax.swing.JButton();
@@ -84,7 +90,7 @@ public class ClientCommercial extends javax.swing.JFrame {
             }
         });
 
-        CommercialPanel.setBackground(new java.awt.Color(0, 204, 204));
+        paymethodCom.setBackground(new java.awt.Color(0, 204, 204));
 
         welcomeCommercial.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
         welcomeCommercial.setForeground(new java.awt.Color(255, 255, 255));
@@ -135,22 +141,38 @@ public class ClientCommercial extends javax.swing.JFrame {
 
         scrollList.setViewportView(jScrollPane1);
 
-        javax.swing.GroupLayout CommercialPanelLayout = new javax.swing.GroupLayout(CommercialPanel);
-        CommercialPanel.setLayout(CommercialPanelLayout);
-        CommercialPanelLayout.setHorizontalGroup(
-            CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(CommercialPanelLayout.createSequentialGroup()
-                .addGroup(CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(CommercialPanelLayout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jSeparator2))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, CommercialPanelLayout.createSequentialGroup()
+        billCom.setForeground(new java.awt.Color(0, 0, 0));
+        billCom.setText("VIEW BILL");
+
+        paybutton.setText("PAY BILL");
+
+        paymentCom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                paymentComActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("INPUT PAYMENT");
+
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setText("PAYMENT METHOD");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Gcash", "Paymaya" }));
+
+        javax.swing.GroupLayout paymethodComLayout = new javax.swing.GroupLayout(paymethodCom);
+        paymethodCom.setLayout(paymethodComLayout);
+        paymethodComLayout.setHorizontalGroup(
+            paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paymethodComLayout.createSequentialGroup()
+                .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, paymethodComLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(welcomeCommercial, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 271, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, CommercialPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, paymethodComLayout.createSequentialGroup()
                         .addGap(21, 21, 21)
-                        .addGroup(CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(switchCom)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dateCom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -159,55 +181,94 @@ public class ClientCommercial extends javax.swing.JFrame {
                             .addComponent(meterName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(scrollList, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(meterNameCom, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, CommercialPanelLayout.createSequentialGroup()
-                                .addGap(39, 39, 39)
-                                .addComponent(addmeterCom)
-                                .addGap(26, 26, 26)))))
+                        .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(paymethodComLayout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(meterNameCom, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(paymethodComLayout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addComponent(addmeterCom)))
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, paymethodComLayout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator2)
+                            .addGroup(paymethodComLayout.createSequentialGroup()
+                                .addComponent(billCom, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(paymethodComLayout.createSequentialGroup()
+                                        .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(paymethodComLayout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(paymethodComLayout.createSequentialGroup()
+                                                    .addGap(117, 117, 117)
+                                                    .addComponent(paymentCom, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(paymethodComLayout.createSequentialGroup()
+                                                    .addGap(103, 103, 103)
+                                                    .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paymethodComLayout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(paybutton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(102, 102, 102)))))))
                 .addGap(24, 24, 24))
         );
-        CommercialPanelLayout.setVerticalGroup(
-            CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(CommercialPanelLayout.createSequentialGroup()
+        paymethodComLayout.setVerticalGroup(
+            paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paymethodComLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(welcomeCommercial, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(CommercialPanelLayout.createSequentialGroup()
-                        .addGroup(CommercialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(CommercialPanelLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3)
-                                .addGap(12, 12, 12)
-                                .addComponent(dateCom, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(meterName, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(prevCom, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(currentCom, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(switchCom))
-                            .addGroup(CommercialPanelLayout.createSequentialGroup()
-                                .addGap(30, 30, 30)
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(meterNameCom, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(addmeterCom, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(71, 71, 71)
-                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(CommercialPanelLayout.createSequentialGroup()
+                .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(paymethodComLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addGap(12, 12, 12)
+                        .addComponent(dateCom, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(meterName, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(prevCom, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(currentCom, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(switchCom))
+                    .addGroup(paymethodComLayout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(meterNameCom, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(addmeterCom, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(paymethodComLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(scrollList, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(220, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(paymethodComLayout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(paymentCom, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(paybutton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(billCom, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         switchCom.setEnabled(false);
 
-        tabbedPane.addTab("COMMERCIAL", CommercialPanel);
+        tabbedPane.addTab("COMMERCIAL", paymethodCom);
 
         sidePanel.setBackground(new java.awt.Color(0, 153, 153));
         sidePanel.setForeground(new java.awt.Color(0, 153, 153));
@@ -239,7 +300,7 @@ public class ClientCommercial extends javax.swing.JFrame {
             .addGroup(sidePanelLayout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 465, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(logoutClient, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34))
         );
@@ -351,6 +412,10 @@ public class ClientCommercial extends javax.swing.JFrame {
     }
     }//GEN-LAST:event_switchComActionPerformed
 
+    private void paymentComActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentComActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_paymentComActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -432,19 +497,25 @@ private void stopMeter(int meterID) {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel CommercialPanel;
     private javax.swing.JButton addmeterCom;
+    private javax.swing.JLabel billCom;
     private javax.swing.JLabel currentCom;
     private javax.swing.JLabel dateCom;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JList<String> listCom;
     private javax.swing.JButton logoutClient;
     private javax.swing.JLabel meterName;
     private javax.swing.JTextField meterNameCom;
+    private javax.swing.JButton paybutton;
+    private javax.swing.JTextField paymentCom;
+    private javax.swing.JPanel paymethodCom;
     private javax.swing.JLabel prevCom;
     private javax.swing.JScrollPane scrollList;
     private javax.swing.JPanel sidePanel;

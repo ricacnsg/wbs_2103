@@ -78,6 +78,12 @@ public class ClientBulk extends javax.swing.JFrame {
         mainMeterLabel = new javax.swing.JLabel();
         prevMain = new javax.swing.JLabel();
         currentMain = new javax.swing.JLabel();
+        billBulk = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        paymentBulk = new javax.swing.JTextField();
+        paymethodBulk = new javax.swing.JComboBox<>();
+        paybuttonBulk = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         logoutButton = new javax.swing.JButton();
@@ -153,15 +159,31 @@ public class ClientBulk extends javax.swing.JFrame {
         currentMain.setForeground(new java.awt.Color(0, 0, 0));
         currentMain.setText("Current Reading:");
 
+        billBulk.setForeground(new java.awt.Color(0, 0, 0));
+        billBulk.setText("<html>VIEW BILL  (dapat kita ang main meter bill  at nakabreakdown ang bill ng mga submeters)");
+
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel4.setText("INPUT PAYMENT");
+
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("PAYMENT METHOD");
+
+        paymentBulk.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                paymentBulkActionPerformed(evt);
+            }
+        });
+
+        paymethodBulk.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Gcash", "Paymaya" }));
+
+        paybuttonBulk.setText("PAY BILL");
+
         javax.swing.GroupLayout BulkPaneLayout = new javax.swing.GroupLayout(BulkPane);
         BulkPane.setLayout(BulkPaneLayout);
         BulkPaneLayout.setHorizontalGroup(
             BulkPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BulkPaneLayout.createSequentialGroup()
                 .addGroup(BulkPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(BulkPaneLayout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jSeparator2))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, BulkPaneLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(welcomeBulk, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -208,7 +230,32 @@ public class ClientBulk extends javax.swing.JFrame {
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dateBulk, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, BulkPaneLayout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(BulkPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator2)
+                            .addGroup(BulkPaneLayout.createSequentialGroup()
+                                .addComponent(billBulk, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(BulkPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(BulkPaneLayout.createSequentialGroup()
+                                        .addGroup(BulkPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(BulkPaneLayout.createSequentialGroup()
+                                                .addGap(120, 120, 120)
+                                                .addGroup(BulkPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addGroup(BulkPaneLayout.createSequentialGroup()
+                                                .addGap(138, 138, 138)
+                                                .addComponent(paymentBulk, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BulkPaneLayout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(paymethodBulk, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BulkPaneLayout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(paybuttonBulk, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(131, 131, 131)))))))
                 .addGap(24, 24, 24))
         );
         BulkPaneLayout.setVerticalGroup(
@@ -248,7 +295,21 @@ public class ClientBulk extends javax.swing.JFrame {
                         .addComponent(switchCom)))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(223, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(BulkPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(billBulk, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(BulkPaneLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(paymentBulk, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(paymethodBulk, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(paybuttonBulk, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         switchCom.setEnabled(false);
@@ -391,6 +452,10 @@ public class ClientBulk extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_logoutButtonActionPerformed
 
+    private void paymentBulkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentBulkActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_paymentBulkActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -496,16 +561,22 @@ public class ClientBulk extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel BulkPane;
     private javax.swing.JButton addSubmeter;
+    private javax.swing.JLabel billBulk;
     private javax.swing.JLabel currentMain;
     private javax.swing.JLabel currentSub;
     private javax.swing.JLabel dateBulk;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JButton logoutButton;
     private javax.swing.JLabel mainMeterLabel;
+    private javax.swing.JButton paybuttonBulk;
+    private javax.swing.JTextField paymentBulk;
+    private javax.swing.JComboBox<String> paymethodBulk;
     private javax.swing.JLabel prevMain;
     private javax.swing.JLabel prevSub;
     private javax.swing.JScrollPane scrollList;

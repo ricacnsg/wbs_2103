@@ -59,7 +59,7 @@ public class ClientResidential extends javax.swing.JFrame {
         residentialUsage = new javax.swing.JLabel();
         residentialBill = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        jButton2 = new javax.swing.JButton();
+        payButton = new javax.swing.JButton();
         paymentField = new javax.swing.JTextField();
         paymentMethod = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
@@ -135,7 +135,7 @@ public class ClientResidential extends javax.swing.JFrame {
         residentialBill.setForeground(new java.awt.Color(0, 0, 0));
         residentialBill.setText("VIEW BILL");
 
-        jButton2.setText("PAY BILL");
+        payButton.setText("PAY BILL");
 
         paymentField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -196,7 +196,7 @@ public class ClientResidential extends javax.swing.JFrame {
                                                     .addComponent(paymentField, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                                     .addGroup(ResidentialPanelLayout.createSequentialGroup()
                                         .addGap(88, 88, 88)
-                                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(ResidentialPanelLayout.createSequentialGroup()
@@ -239,7 +239,7 @@ public class ClientResidential extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(paymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(31, 31, 31)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -384,13 +384,13 @@ public class ClientResidential extends javax.swing.JFrame {
     private javax.swing.JPanel ResidentialPanel;
     private javax.swing.JLabel currentReadingLabel;
     private javax.swing.JLabel dateTodayLabel;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton logoutClient;
+    private javax.swing.JButton payButton;
     private javax.swing.JTextField paymentField;
     private javax.swing.JComboBox<String> paymentMethod;
     private javax.swing.JLabel previousReadingLabel;
