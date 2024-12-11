@@ -3,6 +3,7 @@ package wbs_2103.src.gui;
 import wbs_2103.src.queries.Collector;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import java.util.Map;
 import javax.swing.SwingUtilities;
 
 /**
@@ -68,11 +69,12 @@ public class CollectorUI extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        meterId = new javax.swing.JTextField();
+        prevread = new javax.swing.JTextField();
+        curread = new javax.swing.JTextField();
+        cubicmeter = new javax.swing.JTextField();
+        calculate = new javax.swing.JButton();
+        reading = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(800, 500));
@@ -119,7 +121,7 @@ public class CollectorUI extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 906, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 24, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,7 +141,19 @@ public class CollectorUI extends javax.swing.JFrame {
 
         jLabel5.setText("Cubic Meter");
 
-        jButton2.setText("Calculate");
+        calculate.setText("Calculate");
+        calculate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                calculateActionPerformed(evt);
+            }
+        });
+
+        reading.setText("Read");
+        reading.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                readingActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -147,31 +161,33 @@ public class CollectorUI extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(226, 226, 226)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(37, 37, 37)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addGap(226, 226, 226)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(meterId, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
                             .addGap(216, 216, 216)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(jPanel2Layout.createSequentialGroup()
                                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(curread, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(jPanel2Layout.createSequentialGroup()
                                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(prevread, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(jPanel2Layout.createSequentialGroup()
                                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(58, 58, 58)
-                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jButton2))))
-                .addContainerGap(407, Short.MAX_VALUE))
+                                    .addComponent(cubicmeter, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(335, 335, 335)
+                        .addComponent(calculate)
+                        .addGap(55, 55, 55)
+                        .addComponent(reading)))
+                .addContainerGap(365, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -179,21 +195,23 @@ public class CollectorUI extends javax.swing.JFrame {
                 .addGap(76, 76, 76)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(meterId, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(prevread, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(curread, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cubicmeter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(calculate)
+                    .addComponent(reading))
                 .addContainerGap(193, Short.MAX_VALUE))
         );
 
@@ -231,6 +249,66 @@ public class CollectorUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void calculateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateActionPerformed
+        // TODO add your handling code here:
+         String meterIdValue = meterId.getText().trim();
+    if (meterIdValue.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Please enter a Meter ID.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Fetch meter readings
+    Map<String, String> readings = collector.fetchMeterReadings(meterIdValue);
+    if (readings.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Meter ID not found in the database.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Update the text fields
+    prevread.setText(readings.getOrDefault("previousReading", ""));
+    curread.setText(readings.getOrDefault("currentReading", ""));
+    }//GEN-LAST:event_calculateActionPerformed
+
+    private void readingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readingActionPerformed
+        // TODO add your handling code here:
+          try {
+        // Fetch inputs from the text fields
+        String meterIdValue = meterId.getText().trim();
+        String cubicMeterStr = cubicmeter.getText().trim();
+
+        if (meterIdValue.isEmpty() || cubicMeterStr.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Warning", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        double cubicMeter = Double.parseDouble(cubicMeterStr);
+
+        // Fetch previous and current readings
+        Map<String, String> readings = collector.fetchMeterReadings(meterIdValue);
+        if (readings.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Meter ID not found.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        double previousReading = Double.parseDouble(readings.getOrDefault("currentReading", "0")); // Current becomes previous
+        double newReading = previousReading + cubicMeter;
+
+        // Update the readings in the database
+        if (collector.updateMeterReading(meterIdValue, newReading)) {
+            // Update UI with new readings
+            prevread.setText(String.valueOf(previousReading));
+            curread.setText(String.valueOf(newReading));
+            javax.swing.JOptionPane.showMessageDialog(this, "Reading updated. New Reading: " + newReading, "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Failed to update the reading.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (NumberFormatException e) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Invalid cubic meter value. Please enter a number.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+    }  
+    }//GEN-LAST:event_readingActionPerformed
 
     /**
      * @param args the command line arguments
@@ -270,7 +348,9 @@ public class CollectorUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable ClientRead;
     private javax.swing.JTabbedPane Collect;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton calculate;
+    private javax.swing.JTextField cubicmeter;
+    private javax.swing.JTextField curread;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -281,9 +361,8 @@ public class CollectorUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField meterId;
+    private javax.swing.JTextField prevread;
+    private javax.swing.JButton reading;
     // End of variables declaration//GEN-END:variables
 }
