@@ -1,6 +1,6 @@
 
-package wbs_2103.src.gui;
-import wbs_2103.src.queries.Collector;
+package gui;
+import queries.Collector;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
  */
 public class CollectorUI extends javax.swing.JFrame {
      private Collector collector;
+     private DefaultTableModel tableModel;
 
     /**
      * Creates new form CollectorUI
@@ -19,10 +20,32 @@ public class CollectorUI extends javax.swing.JFrame {
     public CollectorUI() {
         initComponents();
          collector = new Collector();
-        loadClientMeterData();        // initializeTable();
+        //loadClientMeterData();        // initializeTable();
        // loadClientData();
+       populateClientReadTable();
+
     }
     
+    private void populateClientReadTable() {
+    // Clear existing rows in the table
+    DefaultTableModel model = (DefaultTableModel) ClientRead.getModel();
+    model.setRowCount(0);
+
+    // Fetch data from the database
+    List<String[]> clientMeterData = collector.fetchClientMeterData();
+
+    // Add rows to the table model
+    for (String[] row : clientMeterData) {
+        model.addRow(row);
+    }
+
+    // Refresh the table UI
+    ClientRead.repaint();
+}
+
+
+
+    /*
     private void loadClientMeterData() {
     DefaultTableModel model = (DefaultTableModel) ClientRead.getModel();
     model.setRowCount(0); // Clear existing rows
@@ -32,6 +55,7 @@ public class CollectorUI extends javax.swing.JFrame {
         model.addRow(row); // Add each row to the table
     }
 }
+    */
     
     /*
     private void initializeTable() {
@@ -104,13 +128,13 @@ public class CollectorUI extends javax.swing.JFrame {
 
         ClientRead.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ClientID", "Client", "MeterName", "MeterID", "MeterType", "Address", "Status"
+                "ClientID", "Client Name", "MeterName", "MeterID", "MeterType", "Address", "Previous Reading", "Current Reading"
             }
         ));
         jScrollPane2.setViewportView(ClientRead);
