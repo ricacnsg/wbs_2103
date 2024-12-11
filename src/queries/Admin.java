@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import wbs_2103.src.connector.DBConnect;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -60,4 +62,34 @@ public class Admin {
         }
         return false;
     }
+      
+      public List<String[]> fetchClientMeterData() {
+    String sql = """
+            SELECT c.clientID, c.clientName, m.meterName, m.meterID, c.meterType, m.previousReading, m.currentReading
+            FROM client c
+            JOIN meter m ON c.clientID = m.clientID
+            """;
+    List<String[]> clientMeterData = new ArrayList<>();
+
+    try (PreparedStatement stmt = connect.prepareStatement(sql)) {
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            String[] row = new String[7];  // 7 columns as per the SQL query
+            row[0] = rs.getString("clientID");
+            row[1] = rs.getString("clientName");
+            row[2] = rs.getString("meterName");
+            row[3] = rs.getString("meterID");  // Correctly fetching meterID
+            row[4] = rs.getString("meterType");
+            row[5] = rs.getString("previousReading");
+            row[6] = rs.getString("currentReading");
+            clientMeterData.add(row);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    return clientMeterData;
+}
+
 }
