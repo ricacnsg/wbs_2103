@@ -44,6 +44,7 @@ public class CollectorUI extends javax.swing.JFrame {
 }
 
 
+
     /*
     private void loadClientMeterData() {
     DefaultTableModel model = (DefaultTableModel) ClientRead.getModel();
