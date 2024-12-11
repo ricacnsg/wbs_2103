@@ -117,20 +117,6 @@
                                               <Group type="103" groupAlignment="1" attributes="0">
                                                   <Group type="102" alignment="1" attributes="0">
                                                       <EmptySpace max="-2" attributes="0"/>
-<<<<<<< HEAD
-                                                      <Component id="jComboBox1" min="-2" pref="192" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Group type="102" attributes="0">
-                                                          <EmptySpace min="-2" pref="117" max="-2" attributes="0"/>
-                                                          <Component id="paymentCom" min="-2" pref="197" max="-2" attributes="0"/>
-                                                      </Group>
-                                                      <Group type="102" alignment="0" attributes="0">
-                                                          <EmptySpace min="-2" pref="103" max="-2" attributes="0"/>
-                                                          <Group type="103" groupAlignment="0" attributes="0">
-                                                              <Component id="jLabel6" min="-2" pref="108" max="-2" attributes="0"/>
-                                                              <Component id="jLabel5" min="-2" pref="117" max="-2" attributes="0"/>
-=======
                                                       <Component id="jComboBox1" min="-2" pref="153" max="-2" attributes="0"/>
                                                   </Group>
                                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -143,7 +129,6 @@
                                                           <Group type="103" groupAlignment="0" attributes="0">
                                                               <Component id="jLabel5" min="-2" pref="117" max="-2" attributes="0"/>
                                                               <Component id="jLabel6" min="-2" pref="108" max="-2" attributes="0"/>
->>>>>>> d19e02a18759acc71502bb8b5d9a6bff12c1f094
                                                           </Group>
                                                       </Group>
                                                   </Group>
@@ -153,11 +138,7 @@
                                           <Group type="102" alignment="1" attributes="0">
                                               <EmptySpace max="32767" attributes="0"/>
                                               <Component id="paybutton" min="-2" pref="98" max="-2" attributes="0"/>
-<<<<<<< HEAD
-                                              <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
-=======
                                               <EmptySpace min="-2" pref="113" max="-2" attributes="0"/>
->>>>>>> d19e02a18759acc71502bb8b5d9a6bff12c1f094
                                           </Group>
                                       </Group>
                                   </Group>
@@ -171,55 +152,6 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-<<<<<<< HEAD
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="welcomeCommercial" min="-2" pref="67" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                              <Component id="dateCom" min="-2" pref="24" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="meterName" min="-2" pref="20" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="prevCom" min="-2" pref="25" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="currentCom" min="-2" pref="25" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="switchCom" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                              <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="meterNameCom" min="-2" pref="31" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="addmeterCom" min="-2" pref="34" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="scrollList" min="-2" pref="160" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jSeparator2" min="-2" pref="15" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="paymentCom" min="-2" pref="30" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jComboBox1" min="-2" pref="34" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-                              <Component id="paybutton" min="-2" pref="39" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="billCom" min="-2" pref="219" max="-2" attributes="0"/>
-                      </Group>
-=======
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace max="32767" attributes="0"/>
@@ -270,7 +202,6 @@
                               <Component id="billCom" min="-2" pref="219" max="-2" attributes="0"/>
                           </Group>
                       </Group>
->>>>>>> d19e02a18759acc71502bb8b5d9a6bff12c1f094
                       <EmptySpace pref="36" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -412,12 +343,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="paymentCom">
-<<<<<<< HEAD
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="paymentComActionPerformed"/>
-              </Events>
-=======
->>>>>>> d19e02a18759acc71502bb8b5d9a6bff12c1f094
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
