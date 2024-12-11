@@ -1,11 +1,12 @@
-package wbs_2103.src.queries;
+package queries;
 
+import java.sql.*;
 import java.awt.Component;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
-import wbs_2103.src.connector.DBConnect;
+import connector.DBConnect;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -63,6 +64,55 @@ public class Collector {
         }
     }
      
+public List<String[]> fetchClientMeterData() {
+    String sql = """
+        SELECT 
+            c.clientID, 
+            c.clientName, 
+            m.meterName, 
+            m.meterID, 
+            m.meterType, 
+            a.addressName AS address, 
+            m.previousReading, 
+            m.currentReading
+        FROM 
+            client c
+        JOIN 
+            meter m ON c.clientID = m.clientID
+        JOIN 
+            address a ON c.addressID = a.addressID
+    """;
+
+    List<String[]> clientMeterData = new ArrayList<>();
+
+    try (PreparedStatement stmt = connect.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+
+        while (rs.next()) {
+            String[] row = new String[8];  // Adjusted the size of the row to match the columns
+            row[0] = String.valueOf(rs.getInt("clientID"));
+            row[1] = rs.getString("clientName");
+            row[2] = rs.getString("meterName");
+            row[3] = String.valueOf(rs.getInt("meterID"));
+            row[4] = rs.getString("meterType");
+            row[5] = rs.getString("address");
+            row[6] = String.valueOf(rs.getDouble("previousReading"));
+            row[7] = String.valueOf(rs.getDouble("currentReading"));
+            clientMeterData.add(row);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    return clientMeterData;
+}
+
+
+
+     
+     
+    /* 
     public List<String[]> fetchClientMeterData() {
     String sql = """
         SELECT c.clientID, c.clientName, m.meterName, m.meterID, m.meterType, a.addressName 
@@ -92,7 +142,7 @@ public class Collector {
     return clientMeterData;
 }
 
-
+*/
      /*
       public void fetchClientData(ClientRead table) {
         String query = "SELECT c.clientID, c.clientName, m.meterName, m.meterID, m.meterType, a.addressName " +
