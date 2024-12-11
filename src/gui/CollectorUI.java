@@ -1,9 +1,12 @@
 
 package gui;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import queries.Collector;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.Map;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
@@ -11,17 +14,21 @@ import javax.swing.SwingUtilities;
  * @author Nhel Hernadez
  */
 public class CollectorUI extends javax.swing.JFrame {
-     private Collector collector;
+     Collector collector = new Collector();
      private DefaultTableModel tableModel;
+     private double billAmount;
+     private double currentReading;
+     private double penaltyCharge;
+     private double leakCharge;
+     private double charges;
+     private LocalDate latestpaymentdate;
 
     /**
      * Creates new form CollectorUI
      */
     public CollectorUI() {
         initComponents();
-         collector = new Collector();
-        //loadClientMeterData();        // initializeTable();
-       // loadClientData();
+        //collector = new Collector();
        populateClientReadTable();
 
     }
@@ -31,10 +38,8 @@ public class CollectorUI extends javax.swing.JFrame {
     DefaultTableModel model = (DefaultTableModel) ClientRead.getModel();
     model.setRowCount(0);
 
-    // Fetch data from the database
     List<String[]> clientMeterData = collector.fetchClientMeterData();
 
-    // Add rows to the table model
     for (String[] row : clientMeterData) {
         model.addRow(row);
     }
@@ -42,35 +47,6 @@ public class CollectorUI extends javax.swing.JFrame {
     // Refresh the table UI
     ClientRead.repaint();
 }
-
-
-
-    /*
-    private void loadClientMeterData() {
-    DefaultTableModel model = (DefaultTableModel) ClientRead.getModel();
-    model.setRowCount(0); // Clear existing rows
-    
-    List<String[]> clientMeterData = collector.fetchClientMeterData();
-    for (String[] row : clientMeterData) {
-        model.addRow(row); // Add each row to the table
-    }
-}
-    */
-    
-    /*
-    private void initializeTable() {
-     DefaultTableModel model = new DefaultTableModel(
-    new Object[][] {},
-    new String[] { "ClientID", "Client", "MeterName", "MeterID", "MeterType", "Address" }
-        );
-        ClientRead.setModel(model);
-
-    }
-    
-      private void loadClientData() {
-        SwingUtilities.invokeLater(() -> collector.fetchClientData(ClientRead));
-    }
-    */
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -90,15 +66,14 @@ public class CollectorUI extends javax.swing.JFrame {
         ClientRead = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        meterId = new javax.swing.JTextField();
-        prevread = new javax.swing.JTextField();
-        curread = new javax.swing.JTextField();
-        cubicmeter = new javax.swing.JTextField();
+        prevRead = new javax.swing.JLabel();
+        currentRead = new javax.swing.JLabel();
+        billAmountLabel = new javax.swing.JLabel();
+        meterIDField = new javax.swing.JTextField();
         calculate = new javax.swing.JButton();
-        reading = new javax.swing.JButton();
+        send = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        hasLeak = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(800, 500));
@@ -125,6 +100,12 @@ public class CollectorUI extends javax.swing.JFrame {
         );
 
         jPanel3.setBackground(new java.awt.Color(0, 153, 153));
+
+        Collect.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                CollectStateChanged(evt);
+            }
+        });
 
         ClientRead.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -157,13 +138,15 @@ public class CollectorUI extends javax.swing.JFrame {
 
         Collect.addTab("Collector", jPanel4);
 
+        jPanel2.setBackground(new java.awt.Color(0, 153, 153));
+
         jLabel2.setText("MeterID");
 
-        jLabel3.setText("Previos Reading");
+        prevRead.setText("Previos Reading");
 
-        jLabel4.setText("Current Reading");
+        currentRead.setText("Current Reading");
 
-        jLabel5.setText("Cubic Meter");
+        billAmountLabel.setText("Bill Amount");
 
         calculate.setText("Calculate");
         calculate.addActionListener(new java.awt.event.ActionListener() {
@@ -172,12 +155,16 @@ public class CollectorUI extends javax.swing.JFrame {
             }
         });
 
-        reading.setText("Read");
-        reading.addActionListener(new java.awt.event.ActionListener() {
+        send.setText("SEND");
+        send.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                readingActionPerformed(evt);
+                sendActionPerformed(evt);
             }
         });
+
+        jLabel3.setText("Leakage");
+
+        hasLeak.setText("has leakage");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -190,28 +177,25 @@ public class CollectorUI extends javax.swing.JFrame {
                             .addGap(226, 226, 226)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(meterId, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(meterIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel2Layout.createSequentialGroup()
                             .addGap(216, 216, 216)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(prevRead, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(billAmountLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(currentRead, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
                                 .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(curread, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(prevread, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(58, 58, 58)
-                                    .addComponent(cubicmeter, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(80, 80, 80)
+                                    .addComponent(hasLeak, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(30, 30, 30)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(335, 335, 335)
+                        .addGap(302, 302, 302)
                         .addComponent(calculate)
-                        .addGap(55, 55, 55)
-                        .addComponent(reading)))
-                .addContainerGap(365, Short.MAX_VALUE))
+                        .addGap(87, 87, 87)
+                        .addComponent(send)))
+                .addContainerGap(366, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,24 +203,22 @@ public class CollectorUI extends javax.swing.JFrame {
                 .addGap(76, 76, 76)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(meterId, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(meterIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addComponent(prevRead, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(currentRead, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(billAmountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(prevread, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(curread, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cubicmeter, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel3)
+                    .addComponent(hasLeak))
+                .addGap(35, 35, 35)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(calculate)
-                    .addComponent(reading))
-                .addContainerGap(193, Short.MAX_VALUE))
+                    .addComponent(send))
+                .addContainerGap(146, Short.MAX_VALUE))
         );
 
         Collect.addTab("Client", jPanel2);
@@ -275,68 +257,122 @@ public class CollectorUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void calculateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateActionPerformed
-        // TODO add your handling code here:
-         String meterIdValue = meterId.getText().trim();
-    if (meterIdValue.isEmpty()) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Please enter a Meter ID.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    // Fetch meter readings
-    Map<String, String> readings = collector.fetchMeterReadings(meterIdValue);
-    if (readings.isEmpty()) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Meter ID not found in the database.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    // Update the text fields
-    prevread.setText(readings.getOrDefault("previousReading", ""));
-    curread.setText(readings.getOrDefault("currentReading", ""));
+        calculateBillButton();
     }//GEN-LAST:event_calculateActionPerformed
 
-    private void readingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readingActionPerformed
-        // TODO add your handling code here:
-          try {
-        // Fetch inputs from the text fields
-        String meterIdValue = meterId.getText().trim();
-        String cubicMeterStr = cubicmeter.getText().trim();
+    private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
+        String meterId = meterIDField.getText();
+        double totalBill = billAmount + charges;  // Ensure totalBill includes charges
 
-        if (meterIdValue.isEmpty() || cubicMeterStr.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all fields.", "Warning", javax.swing.JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+        int clientId = collector.fetchClientIDByMeterID(meterId);
 
-        double cubicMeter = Double.parseDouble(cubicMeterStr);
-
-        // Fetch previous and current readings
-        Map<String, String> readings = collector.fetchMeterReadings(meterIdValue);
-        if (readings.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Meter ID not found.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        double previousReading = Double.parseDouble(readings.getOrDefault("currentReading", "0")); // Current becomes previous
-        double newReading = previousReading + cubicMeter;
-
-        // Update the readings in the database
-        if (collector.updateMeterReading(meterIdValue, newReading)) {
-            // Update UI with new readings
-            prevread.setText(String.valueOf(previousReading));
-            curread.setText(String.valueOf(newReading));
-            javax.swing.JOptionPane.showMessageDialog(this, "Reading updated. New Reading: " + newReading, "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        if (clientId != -1) {  
+            if (collector.saveBillToDatabase(clientId, meterId, totalBill, charges)) {
+                JOptionPane.showMessageDialog(null, 
+                    "Bill saved successfully.", 
+                    "Success", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                collector.updateMeterReading(meterId, currentReading);
+            } else {
+                JOptionPane.showMessageDialog(null, 
+                    "Error saving the bill.", 
+                    "Error", 
+                    JOptionPane.ERROR_MESSAGE);
+            }
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Failed to update the reading.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, 
+                "No client found for the provided meter ID.", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
         }
-    } catch (NumberFormatException e) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Invalid cubic meter value. Please enter a number.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-    } catch (Exception e) {
-        javax.swing.JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-    }  
-    }//GEN-LAST:event_readingActionPerformed
+    }//GEN-LAST:event_sendActionPerformed
+
+    private void CollectStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_CollectStateChanged
+        populateClientReadTable();
+    }//GEN-LAST:event_CollectStateChanged
 
     /**
      * @param args the command line arguments
      */
+    
+    private void calculateBillButton() {
+        String meterId = meterIDField.getText();
+
+        Map<String, String> meterReadings = collector.fetchMeterReadings(meterId);
+
+        if (meterReadings.isEmpty()) {
+            JOptionPane.showMessageDialog(null, 
+                "No meter readings found for the provided meter ID.", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        double previousReading = Double.parseDouble(meterReadings.get("previousReading"));
+        currentReading = Double.parseDouble(meterReadings.get("currentReading"));
+
+        double cubicMetersUsed = currentReading - previousReading;
+
+        billAmount = cubicMetersUsed * 15;
+        String billAmountStr = String.format("%.2f", billAmount);
+
+        prevRead.setText("Previous Reading: " + String.valueOf(previousReading)); // Set previous reading
+        currentRead.setText("Current Reading: " + String.valueOf(currentReading));   // Set current reading
+        billAmountLabel.setText("Bill Amount: " + billAmountStr);
+
+        // Calculate penalty and leak charges
+        String meterIdInput = meterIDField.getText();
+        int clientId = collector.fetchClientIDByMeterID(meterIdInput);
+
+        penaltyCharge = 0;
+        leakCharge = 0;
+
+        if (latestpaymentdate != null) {
+            // Get the current date
+            LocalDate currentDate = LocalDate.now();
+
+            long daysDifference = ChronoUnit.DAYS.between(latestpaymentdate, currentDate);
+
+            // Check if the difference is greater than 30 days
+            if (daysDifference > 30) {
+                penaltyCharge = 20.0;
+                JOptionPane.showMessageDialog(null, 
+                    "Penalty of 20 pesos will be applied.", 
+                    "Penalty Notice", 
+                    JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, 
+                    "No penalty. Latest payment is within 30 days.", 
+                    "Payment Status", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, 
+                "No payment history found for this client.", 
+                "Payment History", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+
+        boolean leak = hasLeak.isSelected();
+
+        if (leak == true) {
+            leakCharge = 30.0; 
+        }
+
+        charges = penaltyCharge + leakCharge;
+
+        double totalBill = billAmount + charges;  
+        String totalBillStr = String.format("%.2f", totalBill);
+
+        JOptionPane.showMessageDialog(null, 
+            "Total charges: " + charges + " pesos\nTotal Bill Amount: " + totalBillStr, 
+            "Total Charges", 
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+
+
+
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -372,21 +408,20 @@ public class CollectorUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable ClientRead;
     private javax.swing.JTabbedPane Collect;
+    private javax.swing.JLabel billAmountLabel;
     private javax.swing.JButton calculate;
-    private javax.swing.JTextField cubicmeter;
-    private javax.swing.JTextField curread;
+    private javax.swing.JLabel currentRead;
+    private javax.swing.JCheckBox hasLeak;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField meterId;
-    private javax.swing.JTextField prevread;
-    private javax.swing.JButton reading;
+    private javax.swing.JTextField meterIDField;
+    private javax.swing.JLabel prevRead;
+    private javax.swing.JButton send;
     // End of variables declaration//GEN-END:variables
 }

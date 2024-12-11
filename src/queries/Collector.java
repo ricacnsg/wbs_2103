@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import connector.DBConnect;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -154,8 +155,72 @@ public Map<String, String> fetchMeterReadings(String meterId) {
         return false;
     }
 }
+   
+   public int fetchClientIDByMeterID(String meterId) {
+    String query = "SELECT clientID FROM meter WHERE meterID = ?";
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setString(1, meterId);
+        ResultSet rs = stmt.executeQuery();
+        
+        if (rs.next()) {
+            return rs.getInt("clientID");
+        } else {
+            JOptionPane.showMessageDialog(null, "No meter found with the provided ID.", "Info", JOptionPane.INFORMATION_MESSAGE);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error fetching client ID: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    return -1; 
+}
+
      
-     
+public boolean saveBillToDatabase(int clientId, String meterId, double totalBill, double charges) {
+    String query = "INSERT INTO bill (clientID, meterID, billingPeriod, totalBill, charges, balance, lastUpdated) "
+                 + "VALUES (?, ?, CURDATE(), ?, ?, ?, NOW())";  
+    double balance = totalBill + charges;  
+
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, clientId);
+        stmt.setString(2, meterId);
+        stmt.setDouble(3, totalBill);
+        stmt.setDouble(4, charges);  
+        stmt.setDouble(5, balance);  
+        int rowsAffected = stmt.executeUpdate();
+
+        if (rowsAffected > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error saving bill: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+}
+
+    public LocalDate getLatestPaymentDate(int meterID, int clientID) {
+        String query = "SELECT MAX(paymentDate) AS latestPaymentDate FROM paymenthistory WHERE meterID = ? AND clientID = ?";
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, meterID);
+            stmt.setInt(2, clientID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Date date = rs.getDate("latestPaymentDate");
+                    if (date != null) {
+                        return date.toLocalDate();
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+   
     /* 
     public List<String[]> fetchClientMeterData() {
     String sql = """
