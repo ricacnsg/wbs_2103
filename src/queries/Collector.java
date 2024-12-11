@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import wbs_2103.src.connector.DBConnect;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -90,6 +92,50 @@ public class Collector {
         JOptionPane.showMessageDialog(null, "Error fetching data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
     return clientMeterData;
+}
+    
+   public Map<String, String> fetchMeterReadings(String meterId) {
+    Map<String, String> meterReadings = new HashMap<>();
+    String query = "SELECT previousReading, currentReading FROM meter WHERE meterID = ?";
+    
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setString(1, meterId);
+        ResultSet rs = stmt.executeQuery();
+        
+        if (rs.next()) {
+            meterReadings.put("previousReading", rs.getString("previousReading"));
+            meterReadings.put("currentReading", rs.getString("currentReading"));
+        } else {
+            JOptionPane.showMessageDialog(null, "No meter found with the provided ID.", "Info", JOptionPane.INFORMATION_MESSAGE);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error fetching meter readings: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    return meterReadings;
+}
+   
+   public boolean updateMeterReading(String meterId, double newReading) {
+    String query = "UPDATE meter SET currentReading = ?, previousReading = currentReading WHERE meterID = ?";
+    
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setDouble(1, newReading);
+        stmt.setString(2, meterId);
+        
+        int rowsAffected = stmt.executeUpdate();
+        if (rowsAffected > 0) {
+            JOptionPane.showMessageDialog(null, "Meter reading updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(null, "Meter ID not found. No update performed.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error updating meter reading: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
 }
 
 
