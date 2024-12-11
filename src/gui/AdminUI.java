@@ -3,19 +3,36 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package wbs_2103.src.gui;
+import wbs_2103.src.queries.Admin;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
 
 /**
  *
  * @author Nhel Hernadez
  */
 public class AdminUI extends javax.swing.JFrame {
+     private Admin admin;
+     
 
     /**
      * Creates new form AdminUI
      */
     public AdminUI() {
         initComponents();
+        admin = new Admin(); // Initialize Admin instance
+        loadClientMeterData(); // Load data into the Monitor table
     }
+    
+     private void loadClientMeterData() {
+    DefaultTableModel model = (DefaultTableModel) Monitor.getModel();
+    model.setRowCount(0); // Clear existing rows
+
+    List<String[]> clientMeterData = admin.fetchClientMeterData();
+    for (String[] row : clientMeterData) {
+        model.addRow(row); // Add each row to the table
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,10 +46,10 @@ public class AdminUI extends javax.swing.JFrame {
         jPanel5 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        MonitorTab = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        Monitor = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
@@ -65,18 +82,18 @@ public class AdminUI extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 204, 204));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        Monitor.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ClientID", "ClientName", "MeterName", "MeterID", "MeterType", "Previos Reading", "Current Reading", "Status", "Payment", "Paid/Unpaid"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(Monitor);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -91,11 +108,11 @@ public class AdminUI extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Monitor ", jPanel3);
+        MonitorTab.addTab("Monitor ", jPanel3);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -108,7 +125,7 @@ public class AdminUI extends javax.swing.JFrame {
             .addGap(0, 461, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("Collection", jPanel4);
+        MonitorTab.addTab("Collection", jPanel4);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -121,7 +138,7 @@ public class AdminUI extends javax.swing.JFrame {
             .addGap(0, 461, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("complaint", jPanel6);
+        MonitorTab.addTab("complaint", jPanel6);
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -134,17 +151,17 @@ public class AdminUI extends javax.swing.JFrame {
             .addGap(0, 461, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("SignUp", jPanel7);
+        MonitorTab.addTab("SignUp", jPanel7);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(MonitorTab)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addComponent(MonitorTab)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -201,6 +218,8 @@ public class AdminUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable Monitor;
+    private javax.swing.JTabbedPane MonitorTab;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -209,7 +228,5 @@ public class AdminUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
