@@ -688,6 +688,186 @@ public double getAmountDue(int clientID, int meterID) {
     return amountDue; // Return the amount due
 }
 
+// payment for bulk
+public String loadBulkBillDetails(int clientId, int meterId) {
+    // Query to fetch readings from the meter table
+    String mainQuery = "SELECT previousReading, currentReading FROM meter WHERE meterID = ?";
+
+    // Query to fetch billing details for the main meter
+    String mainMeterQuery = "SELECT billingPeriod, totalBill, balance, charges, meterUsed, lastUpdated, meterUsed " +
+                            "FROM bill WHERE clientID = ? AND meterID = ? ORDER BY lastUpdated DESC LIMIT 1";
+
+    // Query to fetch submeter details
+    String submeterQuery = "SELECT submeterID, submeterLocation, previousReading, currentReading " +
+                           "FROM submeter WHERE primaryMeterID = ?";
+
+    StringBuilder billDetails = new StringBuilder();
+
+    try (
+        // Prepare statements
+        PreparedStatement mainMeterStmt = connect.prepareStatement(mainMeterQuery);
+        PreparedStatement meterStmt = connect.prepareStatement(mainQuery);
+    ) {
+        // Fetch main meter readings from the meter table
+        meterStmt.setInt(1, meterId);
+        double mainPreviousReading = 0;
+        double mainCurrentReading = 0;
+        double mainConsumption = 0;
+
+        try (ResultSet meterRs = meterStmt.executeQuery()) {
+            if (meterRs.next()) {
+                mainPreviousReading = meterRs.getDouble("previousReading");
+                mainCurrentReading = meterRs.getDouble("currentReading");
+            } else {
+                return "No readings found for the main meter.";
+            }
+        }
+
+        // Fetch main meter billing details
+        mainMeterStmt.setInt(1, clientId);
+        mainMeterStmt.setInt(2, meterId);
+
+        try (ResultSet mainRs = mainMeterStmt.executeQuery()) {
+            if (mainRs.next()) {
+                // Retrieve main meter details
+                String billingPeriod = mainRs.getString("billingPeriod");
+                double totalBill = mainRs.getDouble("totalBill");
+                double balance = mainRs.getDouble("balance");
+                double charges = mainRs.getDouble("charges");
+                Timestamp lastUpdated = mainRs.getTimestamp("lastUpdated");
+                mainConsumption = mainRs.getDouble("meterUsed");
+
+                // Append main meter details
+                billDetails.append("<html><body>")
+                    .append("<h3>Main Meter Details</h3>")
+                    .append("<p>Billing Period: ").append(billingPeriod).append("</p>")
+                    //.append("<p>Previous Reading: ").append(mainPreviousReading).append("</p>")
+                    //.append("<p>Current Reading: ").append(mainCurrentReading).append("</p>")
+                    .append("<p>Consumption: ").append(mainConsumption).append(" units</p>")
+                    .append("<p>Total Bill: ").append(totalBill).append("</p>")
+                    .append("<p>Balance: ").append(balance).append("</p>")
+                    .append("<p>Additional Charges: ").append(charges).append("</p>")
+                    .append("<p>Last Updated: ").append(lastUpdated).append("</p>");
+            } else {
+                return "No main meter bill details found for the client and meter.";
+            }
+        }
+
+        // Fetch submeter details
+        try (PreparedStatement subStmt = connect.prepareStatement(submeterQuery)) {
+            subStmt.setInt(1, meterId);
+
+            try (ResultSet subRs = subStmt.executeQuery()) {
+                billDetails.append("<h3>Submeter Details</h3>");
+
+                boolean hasSubmeters = false;
+
+                while (subRs.next()) {
+                    hasSubmeters = true;
+                    String submeterName = subRs.getString("submeterLocation");
+                    double subPreviousReading = subRs.getDouble("previousReading");
+                    double subCurrentReading = subRs.getDouble("currentReading");
+
+                    double subConsumption = subCurrentReading - subPreviousReading;
+
+                    billDetails.append("<p>")
+                        .append("Submeter Name: ").append(submeterName).append("<br>")
+                        .append("Previous Reading: ").append(subPreviousReading).append("<br>")
+                        .append("Current Reading: ").append(subCurrentReading).append("<br>")
+                        .append("Consumption: ").append(subConsumption).append(" units</p>");
+                }
+
+                if (!hasSubmeters) {
+                    billDetails.append("<p>No submeters available.</p>");
+                }
+
+                billDetails.append("</body></html>");
+            }
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error fetching bill details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        return "Error fetching bill details.";
+    }
+
+    return billDetails.toString();
+}
+
+public void processPayment(int clientId, int meterId, double paymentAmount, String paymentMethod) {
+    String billQuery = "SELECT totalBill, charges, meterUsed FROM bill WHERE clientID = ? AND meterID = ? ORDER BY lastUpdated DESC LIMIT 1";
+    String removeBillQuery = "DELETE FROM bill WHERE clientID = ? AND meterID = ?";
+    String insertPaymentQuery = "INSERT INTO paymentHistory (clientID, meterID, amountPaid, paymentMethod, paymentDate, charges, meterUsed) " +
+                                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    try (PreparedStatement billStmt = connect.prepareStatement(billQuery)) {
+        billStmt.setInt(1, clientId);
+        billStmt.setInt(2, meterId);
+
+        try (ResultSet rs = billStmt.executeQuery()) {
+            if (rs.next()) {
+                double totalBill = rs.getDouble("totalBill");
+                double charges = rs.getDouble("charges");
+                double meterUsed = rs.getDouble("meterUsed");
+                double change = 0;
+
+                if (paymentMethod.equals("Cash") && paymentAmount < totalBill) {
+                    throw new IllegalArgumentException("Payment amount is less than the bill total.");
+                }
+
+                if (paymentMethod.equals("Cash")) {
+                    change = paymentAmount - totalBill;
+                }
+
+                // Insert payment into paymentHistory
+                try (PreparedStatement insertStmt = connect.prepareStatement(insertPaymentQuery)) {
+                    insertStmt.setInt(1, clientId);
+                    insertStmt.setInt(2, meterId);
+                    insertStmt.setDouble(3, paymentAmount);
+                    insertStmt.setString(4, paymentMethod);
+                    insertStmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+                    insertStmt.setDouble(6, charges);
+                    insertStmt.setDouble(7, meterUsed);
+                    insertStmt.executeUpdate();
+                }
+
+                // Remove the bill from the bill table
+                try (PreparedStatement removeStmt = connect.prepareStatement(removeBillQuery)) {
+                    removeStmt.setInt(1, clientId);
+                    removeStmt.setInt(2, meterId);
+                    removeStmt.executeUpdate();
+                }
+
+                // Generate receipt
+                StringBuilder receipt = new StringBuilder();
+                receipt.append("\n----- Receipt -----\n")
+                       .append("Client ID: ").append(clientId).append("\n")
+                       .append("Meter ID: ").append(meterId).append("\n")
+                       .append("Amount Paid: ").append(paymentAmount).append("\n")
+                       .append("Payment Method: ").append(paymentMethod).append("\n")
+                       .append("Payment Date: ").append(new Timestamp(System.currentTimeMillis())).append("\n")
+                       .append("Charges: ").append(charges).append("\n")
+                       .append("Meter Used: ").append(meterUsed).append("\n");
+
+                if (paymentMethod.equals("Cash")) {
+                    receipt.append("Change: ").append(change).append("\n");
+                }
+
+                receipt.append("--------------------\n");
+
+                System.out.println(receipt.toString()); // Replace with GUI receipt display logic if needed
+            } else {
+                throw new SQLException("No bill found for the client and meter.");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        throw new RuntimeException("Error processing payment: " + e.getMessage());
+    }
+}
+
+
+
 
 
 }
