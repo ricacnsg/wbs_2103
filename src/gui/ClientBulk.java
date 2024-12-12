@@ -84,6 +84,10 @@ public class ClientBulk extends javax.swing.JFrame {
         paymentBulk = new javax.swing.JTextField();
         paymethodBulk = new javax.swing.JComboBox<>();
         paybuttonBulk = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel2 = new javax.swing.JPanel();
+        jTextField1 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         logoutButton = new javax.swing.JButton();
@@ -119,13 +123,10 @@ public class ClientBulk extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("METER USAGE");
 
-        dateBulk.setForeground(new java.awt.Color(0, 0, 0));
         dateBulk.setText("Date Today: ");
 
-        prevSub.setForeground(new java.awt.Color(0, 0, 0));
         prevSub.setText("Previous Reading:");
 
-        currentSub.setForeground(new java.awt.Color(0, 0, 0));
         currentSub.setText("Current Reading:");
 
         switchCom.setText("Start Meter");
@@ -135,7 +136,6 @@ public class ClientBulk extends javax.swing.JFrame {
             }
         });
 
-        submetername.setForeground(new java.awt.Color(0, 0, 0));
         submetername.setText("Submeter Name:");
 
         submeterList.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -150,22 +150,16 @@ public class ClientBulk extends javax.swing.JFrame {
         scrollList.setViewportView(scrollPane);
 
         mainMeterLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        mainMeterLabel.setForeground(new java.awt.Color(0, 0, 0));
         mainMeterLabel.setText("Main Meter");
 
-        prevMain.setForeground(new java.awt.Color(0, 0, 0));
         prevMain.setText("Previous Reading:");
 
-        currentMain.setForeground(new java.awt.Color(0, 0, 0));
         currentMain.setText("Current Reading:");
 
-        billBulk.setForeground(new java.awt.Color(0, 0, 0));
         billBulk.setText("<html>VIEW BILL  (dapat kita ang main meter bill  at nakabreakdown ang bill ng mga submeters)");
 
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("INPUT PAYMENT");
 
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("PAYMENT METHOD");
 
         paymentBulk.addActionListener(new java.awt.event.ActionListener() {
@@ -316,6 +310,43 @@ public class ClientBulk extends javax.swing.JFrame {
 
         tabbedPane.addTab("BULK", BulkPane);
 
+        jPanel2.setBackground(new java.awt.Color(0, 204, 204));
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Submit");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(44, 44, 44)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(310, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(319, 319, 319))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(45, 45, 45)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44)
+                .addComponent(jButton1)
+                .addContainerGap(103, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("", jPanel2);
+
+        tabbedPane.addTab("Complaint", jTabbedPane1);
+
         jPanel1.setBackground(new java.awt.Color(0, 153, 153));
 
         jLabel1.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
@@ -456,6 +487,10 @@ public class ClientBulk extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_paymentBulkActionPerformed
 
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -565,13 +600,17 @@ public class ClientBulk extends javax.swing.JFrame {
     private javax.swing.JLabel currentMain;
     private javax.swing.JLabel currentSub;
     private javax.swing.JLabel dateBulk;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton logoutButton;
     private javax.swing.JLabel mainMeterLabel;
     private javax.swing.JButton paybuttonBulk;
