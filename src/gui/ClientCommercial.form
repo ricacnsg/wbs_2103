@@ -117,7 +117,7 @@
                                               <Group type="103" groupAlignment="1" attributes="0">
                                                   <Group type="102" alignment="1" attributes="0">
                                                       <EmptySpace max="-2" attributes="0"/>
-                                                      <Component id="jComboBox1" min="-2" pref="153" max="-2" attributes="0"/>
+                                                      <Component id="selectpaymentMethod" min="-2" pref="153" max="-2" attributes="0"/>
                                                   </Group>
                                                   <Group type="103" groupAlignment="0" attributes="0">
                                                       <Group type="102" attributes="0">
@@ -161,7 +161,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jComboBox1" min="-2" pref="34" max="-2" attributes="0"/>
+                              <Component id="selectpaymentMethod" min="-2" pref="34" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
                               <Component id="paybutton" min="-2" pref="39" max="-2" attributes="0"/>
                           </Group>
@@ -336,11 +336,17 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="VIEW BILL"/>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
+              </AuxValues>
             </Component>
             <Component class="javax.swing.JButton" name="paybutton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="PAY BILL"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="paybuttonActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="paymentCom">
             </Component>
@@ -360,7 +366,7 @@
                 <Property name="text" type="java.lang.String" value="PAYMENT METHOD"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="jComboBox1">
+            <Component class="javax.swing.JComboBox" name="selectpaymentMethod">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="3">

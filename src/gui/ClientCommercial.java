@@ -42,7 +42,6 @@ public class ClientCommercial extends javax.swing.JFrame {
         
         meterList = new DefaultListModel<>();
         loadMeterList();
-        //switchCom.setEnabled(false);
         initComponents();
     }
 
@@ -76,7 +75,7 @@ public class ClientCommercial extends javax.swing.JFrame {
         paymentCom = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        selectpaymentMethod = new javax.swing.JComboBox<>();
         sidePanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         logoutClient = new javax.swing.JButton();
@@ -145,6 +144,11 @@ public class ClientCommercial extends javax.swing.JFrame {
         billCom.setText("VIEW BILL");
 
         paybutton.setText("PAY BILL");
+        paybutton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                paybuttonActionPerformed(evt);
+            }
+        });
 
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("INPUT PAYMENT");
@@ -152,7 +156,7 @@ public class ClientCommercial extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("PAYMENT METHOD");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Gcash", "Paymaya" }));
+        selectpaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Gcash", "Paymaya" }));
 
         javax.swing.GroupLayout paymethodComLayout = new javax.swing.GroupLayout(paymethodCom);
         paymethodCom.setLayout(paymethodComLayout);
@@ -196,7 +200,7 @@ public class ClientCommercial extends javax.swing.JFrame {
                                         .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addGroup(paymethodComLayout.createSequentialGroup()
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(selectpaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(paymethodComLayout.createSequentialGroup()
                                                     .addGap(134, 134, 134)
@@ -225,7 +229,7 @@ public class ClientCommercial extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(selectpaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(38, 38, 38)
                         .addComponent(paybutton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, paymethodComLayout.createSequentialGroup()
@@ -352,7 +356,7 @@ public class ClientCommercial extends javax.swing.JFrame {
     }//GEN-LAST:event_logoutClientActionPerformed
 
     private void listComValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listComValueChanged
-    if (!evt.getValueIsAdjusting()) { 
+if (!evt.getValueIsAdjusting()) { 
         String selectedMeterName = listCom.getSelectedValue();
         if (selectedMeterName != null) {
             int clientID = SharedData.clientID;
@@ -360,12 +364,15 @@ public class ClientCommercial extends javax.swing.JFrame {
 
             if (meterID > 0) { 
                 double[] readings = client.getMeterReadings(meterID);
-                
                 dateCom.setText("Date Today: " + LocalDate.now().toString());
                 meterName.setText("Meter Name: " + selectedMeterName);
                 prevCom.setText("Previous Reading: " + readings[0]);
                 currentCom.setText("Current Reading: " + readings[1]);
                 
+                // Fetch and set the bill details
+                String billDetails = client.loadComBillDetails(clientID, meterID);
+                billCom.setText("<html>" + billDetails + "</html>"); // Ensure HTML tags are used properly
+
                 // Update the switchCom button text
                 if (meterTimers.containsKey(meterID)) {
                     switchCom.setText("Stop Meter");
@@ -394,19 +401,58 @@ public class ClientCommercial extends javax.swing.JFrame {
         return;
     }
 
-    // Check the current state of the meter
+
     if (meterTimers.containsKey(selectedMeterID)) { 
-        // If the timer exists, the meter is running; stop it
         stopMeter(selectedMeterID);
         switchCom.setText("Start Meter");
         JOptionPane.showMessageDialog(this, "Meter stopped!", "Info", JOptionPane.INFORMATION_MESSAGE);
     } else {
-        // If no timer exists, the meter is not running; start it
+
         startMeter(selectedMeterID);
         switchCom.setText("Stop Meter");
         JOptionPane.showMessageDialog(this, "Meter started!", "Info", JOptionPane.INFORMATION_MESSAGE);
     }
     }//GEN-LAST:event_switchComActionPerformed
+
+    private void paybuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paybuttonActionPerformed
+
+    String paymentText = paymentCom.getText().trim();
+    if (paymentText.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter a payment amount.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    double paymentAmount;
+    try {
+        paymentAmount = Double.parseDouble(paymentText);
+        if (paymentAmount <= 0) {
+            throw new NumberFormatException();
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Please enter a valid payment amount.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    String paymentMethod = (String) selectpaymentMethod.getSelectedItem(); // Assuming your combo box is named paymentMethodComboBox
+
+    String selectedMeterName = listCom.getSelectedValue();
+    if (selectedMeterName == null) {
+        JOptionPane.showMessageDialog(this, "Please select a meter first!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    int meterID = client.getMeterIDByMeterName(SharedData.clientID, selectedMeterName);
+
+
+    boolean paymentSuccess = processPayment(SharedData.clientID, meterID, paymentAmount, paymentMethod);
+
+    if (paymentSuccess) {
+        JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        paymentCom.setText(""); // Clear the payment input field
+        // Optionally, refresh bill details or meter readings here
+    } else {
+        JOptionPane.showMessageDialog(this, "Payment failed. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_paybuttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -443,7 +489,7 @@ private void startMeter(int meterID) {
         }
     });
     timer.start();
-    meterTimers.put(meterID, timer); // Add the timer to the Map
+    meterTimers.put(meterID, timer); 
 }
 
 
@@ -451,9 +497,48 @@ private void stopMeter(int meterID) {
     Timer timer = meterTimers.get(meterID);
     if (timer != null) {
         timer.stop();
-        meterTimers.remove(meterID); // Remove the timer from the Map
+        meterTimers.remove(meterID); 
     }
 }
+
+private boolean processPayment(int clientID, int meterID, double paymentAmount, String selectedMethod) {
+    if (client.hasOutstandingBill(clientID, meterID)) {
+        double amountDue = client.getAmountDue(clientID, meterID);
+
+        if (paymentAmount >= amountDue) {
+            double meterUsed = client.getMeterUsed(meterID);
+            client.insertPaymentIntoHistory(clientID, meterID, amountDue, selectedMethod, meterUsed);
+            client.removeBill(clientID, meterID); 
+
+            StringBuilder receipt = new StringBuilder();
+            receipt.append("Receipt\n");
+            receipt.append("Client ID: ").append(clientID).append("\n");
+            receipt.append("Meter ID: ").append(meterID).append("\n");
+            receipt.append("Payment Method: ").append(selectedMethod).append("\n");
+            receipt.append("Amount Due: ").append(amountDue).append("\n");
+            receipt.append("Payment Amount: ").append(paymentAmount).append("\n");
+
+            if ("Cash".equalsIgnoreCase(selectedMethod)) {
+                double change = paymentAmount - amountDue;
+                receipt.append("Change: ").append(change).append("\n");
+            }
+
+            JOptionPane.showMessageDialog(this, receipt.toString(), "Payment Receipt", JOptionPane.INFORMATION_MESSAGE);
+            return true; 
+        } else {
+            JOptionPane.showMessageDialog(this, "Payment amount is insufficient. Amount due: " + amountDue, "Error", JOptionPane.ERROR_MESSAGE);
+            return false; 
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "No outstanding bill to pay.", "Error", JOptionPane.ERROR_MESSAGE);
+        return false; 
+    }
+}
+
+
+
+
+
 
 
     public static void main(String args[]) {
@@ -490,10 +575,9 @@ private void stopMeter(int meterID) {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addmeterCom;
-    private javax.swing.JLabel billCom;
+    protected javax.swing.JLabel billCom;
     private javax.swing.JLabel currentCom;
     private javax.swing.JLabel dateCom;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -510,6 +594,7 @@ private void stopMeter(int meterID) {
     private javax.swing.JPanel paymethodCom;
     private javax.swing.JLabel prevCom;
     private javax.swing.JScrollPane scrollList;
+    private javax.swing.JComboBox<String> selectpaymentMethod;
     private javax.swing.JPanel sidePanel;
     private javax.swing.JToggleButton switchCom;
     private javax.swing.JTabbedPane tabbedPane;
