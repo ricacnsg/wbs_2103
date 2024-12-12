@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Rica Mae
@@ -76,6 +77,11 @@ public class ClientCommercial extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         selectpaymentMethod = new javax.swing.JComboBox<>();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        history = new javax.swing.JTable();
         sidePanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         logoutClient = new javax.swing.JButton();
@@ -263,12 +269,59 @@ public class ClientCommercial extends javax.swing.JFrame {
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(billCom, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         switchCom.setEnabled(false);
 
         tabbedPane.addTab("COMMERCIAL", paymethodCom);
+
+        jPanel1.setBackground(new java.awt.Color(0, 153, 153));
+
+        jLabel4.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel4.setText("PAYMENT HISTORY");
+
+        history.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Payment ID", "Amount Paid", "Payment Method", "Meter Used", "Charges", "Payment Date"
+            }
+        ));
+        jScrollPane4.setViewportView(history);
+
+        jScrollPane2.setViewportView(jScrollPane4);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 674, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(33, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(61, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("PAYMENT HISTORY", jPanel1);
 
         sidePanel.setBackground(new java.awt.Color(0, 153, 153));
         sidePanel.setForeground(new java.awt.Color(0, 153, 153));
@@ -343,6 +396,7 @@ public class ClientCommercial extends javax.swing.JFrame {
         String clientName = client.getClientName(clientID);
 
         welcomeCommercial.setText("Welcome, " + clientName + "!");
+        displayPaymentHistory();
     }//GEN-LAST:event_tabbedPaneStateChanged
 
     private void logoutClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutClientActionPerformed
@@ -535,6 +589,25 @@ private boolean processPayment(int clientID, int meterID, double paymentAmount, 
     }
 }
 
+    private void displayPaymentHistory() {
+        int clientID = SharedData.clientID;
+        List<Object[]> paymentHistoryList = client.getPaymentHistory(clientID);
+
+        // Column names for the table
+        String[] columnNames = {"Payment ID", "Amount Paid", "Payment Method", "Meter Used", "Charges", "Payment Date"};
+
+        // Convert List<Object[]> to 2D array for the table
+        Object[][] data = new Object[paymentHistoryList.size()][6];
+
+        for (int i = 0; i < paymentHistoryList.size(); i++) {
+            data[i] = paymentHistoryList.get(i);  // Directly assign each row's data
+        }
+
+        // Set the table model with data and column names
+        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+        history.setModel(model);
+    }
+
 
 
 
@@ -578,12 +651,17 @@ private boolean processPayment(int clientID, int meterID, double paymentAmount, 
     protected javax.swing.JLabel billCom;
     private javax.swing.JLabel currentCom;
     private javax.swing.JLabel dateCom;
+    private javax.swing.JTable history;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JList<String> listCom;
     private javax.swing.JButton logoutClient;

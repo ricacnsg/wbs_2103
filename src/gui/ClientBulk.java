@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Rica Mae
@@ -85,6 +86,11 @@ public class ClientBulk extends javax.swing.JFrame {
         paybuttonBulk = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         billBulk = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        history = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         logoutButton = new javax.swing.JButton();
@@ -184,7 +190,7 @@ public class ClientBulk extends javax.swing.JFrame {
         jScrollPane1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
 
         billBulk.setForeground(new java.awt.Color(0, 0, 0));
-        billBulk.setText("<html>VIEW BILL  (dapat kita ang main meter bill  \n<br>at nakabreakdown ang bill ng mga submeters) ");
+        billBulk.setText("<html>VIEW BILL  ");
         billBulk.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jScrollPane1.setViewportView(billBulk);
 
@@ -321,6 +327,53 @@ public class ClientBulk extends javax.swing.JFrame {
 
         tabbedPane.addTab("BULK", BulkPane);
 
+        jPanel2.setBackground(new java.awt.Color(0, 153, 153));
+
+        jLabel6.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setText("PAYMENT HISTORY");
+
+        history.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Payment ID", "Amount Paid", "Payment Method", "Meter Used", "Charges", "Payment Date"
+            }
+        ));
+        jScrollPane4.setViewportView(history);
+
+        jScrollPane2.setViewportView(jScrollPane4);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 674, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(33, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(63, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("PAYMENT HISTORY", jPanel2);
+
         jPanel1.setBackground(new java.awt.Color(0, 153, 153));
 
         jLabel1.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
@@ -368,7 +421,7 @@ public class ClientBulk extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
+            .addComponent(tabbedPane)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -449,6 +502,7 @@ public class ClientBulk extends javax.swing.JFrame {
 
         welcomeBulk.setText("Welcome, " + clientName + "!");
         loadMeterReadings(meterID);
+        displayPaymentHistory();
     }//GEN-LAST:event_tabbedPaneStateChanged
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
@@ -608,6 +662,24 @@ public class ClientBulk extends javax.swing.JFrame {
         }
     }
 
+        private void displayPaymentHistory() {
+        int clientID = SharedData.clientID;
+        List<Object[]> paymentHistoryList = client.getPaymentHistory(clientID);
+
+        // Column names for the table
+        String[] columnNames = {"Payment ID", "Amount Paid", "Payment Method", "Meter Used", "Charges", "Payment Date"};
+
+        // Convert List<Object[]> to 2D array for the table
+        Object[][] data = new Object[paymentHistoryList.size()][6];
+
+        for (int i = 0; i < paymentHistoryList.size(); i++) {
+            data[i] = paymentHistoryList.get(i);  // Directly assign each row's data
+        }
+
+        // Set the table model with data and column names
+        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+        history.setModel(model);
+    }
 
     
     
@@ -650,13 +722,18 @@ public class ClientBulk extends javax.swing.JFrame {
     private javax.swing.JLabel currentMain;
     private javax.swing.JLabel currentSub;
     private javax.swing.JLabel dateBulk;
+    private javax.swing.JTable history;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JButton logoutButton;
     private javax.swing.JLabel mainMeterLabel;
