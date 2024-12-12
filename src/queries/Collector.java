@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import connector.DBConnect;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -175,30 +177,39 @@ public Map<String, String> fetchMeterReadings(String meterId) {
 }
 
      
-public boolean saveBillToDatabase(int clientId, String meterId, double totalBill, double charges) {
-    String query = "INSERT INTO bill (clientID, meterID, billingPeriod, totalBill, charges, balance, lastUpdated) "
-                 + "VALUES (?, ?, CURDATE(), ?, ?, ?, NOW())";  
-    double balance = totalBill + charges;  
+public boolean saveBillToDatabase(int clientId, String meterId, double totalBill, double charges, double meterUsed) {
+    String billingPeriod = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    
+    Timestamp lastUpdated = Timestamp.valueOf(LocalDateTime.now());
+    
+    double balance = totalBill + charges;
+
+    String query = "INSERT INTO bill (clientID, meterID, billingPeriod, totalBill, charges, balance, lastUpdated, meterUsed) " +
+                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        // Set the prepared statement parameters
         stmt.setInt(1, clientId);
         stmt.setString(2, meterId);
-        stmt.setDouble(3, totalBill);
-        stmt.setDouble(4, charges);  
-        stmt.setDouble(5, balance);  
+        stmt.setString(3, billingPeriod);  // Set billingPeriod
+        stmt.setDouble(4, totalBill);      // Set totalBill
+        stmt.setDouble(5, charges);        // Set charges
+        stmt.setDouble(6, balance);        // Set balance
+        stmt.setTimestamp(7, lastUpdated); // Set lastUpdated
+        stmt.setDouble(8, meterUsed);      // Set meterUsed
+
         int rowsAffected = stmt.executeUpdate();
 
-        if (rowsAffected > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return rowsAffected > 0;
+
     } catch (SQLException e) {
         e.printStackTrace();
         JOptionPane.showMessageDialog(null, "Error saving bill: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         return false;
     }
 }
+
+
 
     public LocalDate getLatestPaymentDate(int meterID, int clientID) {
         String query = "SELECT MAX(paymentDate) AS latestPaymentDate FROM paymenthistory WHERE meterID = ? AND clientID = ?";

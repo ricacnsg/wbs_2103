@@ -18,6 +18,7 @@ public class CollectorUI extends javax.swing.JFrame {
      private DefaultTableModel tableModel;
      private double billAmount;
      private double currentReading;
+     private double previousReading;
      private double penaltyCharge;
      private double leakCharge;
      private double charges;
@@ -261,30 +262,31 @@ public class CollectorUI extends javax.swing.JFrame {
     }//GEN-LAST:event_calculateActionPerformed
 
     private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
-        String meterId = meterIDField.getText();
-        double totalBill = billAmount + charges;  // Ensure totalBill includes charges
+         String meterId = meterIDField.getText();
+    double totalBill = billAmount + charges;  // Ensure totalBill includes charges
+    double meterUsed = currentReading - previousReading;  // Calculate meterUsed
 
-        int clientId = collector.fetchClientIDByMeterID(meterId);
+    int clientId = collector.fetchClientIDByMeterID(meterId);
 
-        if (clientId != -1) {  
-            if (collector.saveBillToDatabase(clientId, meterId, totalBill, charges)) {
-                JOptionPane.showMessageDialog(null, 
-                    "Bill saved successfully.", 
-                    "Success", 
-                    JOptionPane.INFORMATION_MESSAGE);
-                collector.updateMeterReading(meterId, currentReading);
-            } else {
-                JOptionPane.showMessageDialog(null, 
-                    "Error saving the bill.", 
-                    "Error", 
-                    JOptionPane.ERROR_MESSAGE);
-            }
+    if (clientId != -1) {  
+        if (collector.saveBillToDatabase(clientId, meterId, totalBill, charges, meterUsed)) {
+            JOptionPane.showMessageDialog(null, 
+                "Bill saved successfully.", 
+                "Success", 
+                JOptionPane.INFORMATION_MESSAGE);
+            collector.updateMeterReading(meterId, currentReading);
         } else {
             JOptionPane.showMessageDialog(null, 
-                "No client found for the provided meter ID.", 
+                "Error saving the bill.", 
                 "Error", 
                 JOptionPane.ERROR_MESSAGE);
         }
+    } else {
+        JOptionPane.showMessageDialog(null, 
+            "No client found for the provided meter ID.", 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_sendActionPerformed
 
     private void CollectStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_CollectStateChanged
@@ -295,80 +297,59 @@ public class CollectorUI extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     
-    private void calculateBillButton() {
-        String meterId = meterIDField.getText();
+private void calculateBillButton() {
+    String meterId = meterIDField.getText();
 
-        Map<String, String> meterReadings = collector.fetchMeterReadings(meterId);
+    // Fetch meter readings
+    Map<String, String> meterReadings = collector.fetchMeterReadings(meterId);
 
-        if (meterReadings.isEmpty()) {
-            JOptionPane.showMessageDialog(null, 
-                "No meter readings found for the provided meter ID.", 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        double previousReading = Double.parseDouble(meterReadings.get("previousReading"));
-        currentReading = Double.parseDouble(meterReadings.get("currentReading"));
-
-        double cubicMetersUsed = currentReading - previousReading;
-
-        billAmount = cubicMetersUsed * 15;
-        String billAmountStr = String.format("%.2f", billAmount);
-
-        prevRead.setText("Previous Reading: " + String.valueOf(previousReading)); // Set previous reading
-        currentRead.setText("Current Reading: " + String.valueOf(currentReading));   // Set current reading
-        billAmountLabel.setText("Bill Amount: " + billAmountStr);
-
-        // Calculate penalty and leak charges
-        String meterIdInput = meterIDField.getText();
-        int clientId = collector.fetchClientIDByMeterID(meterIdInput);
-
-        penaltyCharge = 0;
-        leakCharge = 0;
-
-        if (latestpaymentdate != null) {
-            // Get the current date
-            LocalDate currentDate = LocalDate.now();
-
-            long daysDifference = ChronoUnit.DAYS.between(latestpaymentdate, currentDate);
-
-            // Check if the difference is greater than 30 days
-            if (daysDifference > 30) {
-                penaltyCharge = 20.0;
-                JOptionPane.showMessageDialog(null, 
-                    "Penalty of 20 pesos will be applied.", 
-                    "Penalty Notice", 
-                    JOptionPane.WARNING_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(null, 
-                    "No penalty. Latest payment is within 30 days.", 
-                    "Payment Status", 
-                    JOptionPane.INFORMATION_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, 
-                "No payment history found for this client.", 
-                "Payment History", 
-                JOptionPane.ERROR_MESSAGE);
-        }
-
-        boolean leak = hasLeak.isSelected();
-
-        if (leak == true) {
-            leakCharge = 30.0; 
-        }
-
-        charges = penaltyCharge + leakCharge;
-
-        double totalBill = billAmount + charges;  
-        String totalBillStr = String.format("%.2f", totalBill);
-
+    if (meterReadings.isEmpty()) {
         JOptionPane.showMessageDialog(null, 
-            "Total charges: " + charges + " pesos\nTotal Bill Amount: " + totalBillStr, 
-            "Total Charges", 
-            JOptionPane.INFORMATION_MESSAGE);
+            "No meter readings found for the provided meter ID.", 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
+        return;
     }
+
+    previousReading = Double.parseDouble(meterReadings.get("previousReading"));
+    currentReading = Double.parseDouble(meterReadings.get("currentReading"));
+
+    double cubicMetersUsed = currentReading - previousReading;  // Calculate meterUsed
+
+    billAmount = cubicMetersUsed * 15;
+    String billAmountStr = String.format("%.2f", billAmount);
+
+    prevRead.setText("Previous Reading: " + String.valueOf(previousReading)); // Set previous reading
+    currentRead.setText("Current Reading: " + String.valueOf(currentReading));   // Set current reading
+    billAmountLabel.setText("Bill Amount: " + billAmountStr);
+
+    // Calculate penalty and leak charges
+    String meterIdInput = meterIDField.getText();
+    int clientId = collector.fetchClientIDByMeterID(meterIdInput);
+
+    penaltyCharge = 0;
+    leakCharge = 0;
+
+    // Calculate penalty and leak charges...
+    
+    boolean leak = hasLeak.isSelected();
+
+    if (leak == true) {
+        leakCharge = 30.0; 
+    }
+    // Calculate total charges
+    charges = penaltyCharge + leakCharge;
+
+    // Add charges to the billAmount
+    double totalBill = billAmount + charges;  // Update the total bill with charges
+    String totalBillStr = String.format("%.2f", totalBill);
+
+    JOptionPane.showMessageDialog(null, 
+        "Total charges: " + charges + " pesos\nTotal Bill Amount: " + totalBillStr, 
+        "Total Charges", 
+        JOptionPane.INFORMATION_MESSAGE);
+}
+
 
 
 
