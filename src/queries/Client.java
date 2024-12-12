@@ -867,6 +867,36 @@ public void processPayment(int clientId, int meterId, double paymentAmount, Stri
 }
 
 
+//for displaying payment history of client
+public List<Object[]> getPaymentHistory(int clientID) {
+    List<Object[]> paymentHistoryList = new ArrayList<>();
+    String query = "SELECT paymentID, amountPaid, paymentMethod, meterUsed, charges, paymentDate " +
+                   "FROM paymenthistory WHERE clientID = ?";
+
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        // Set the clientID parameter in the query
+        stmt.setInt(1, clientID);
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                // Retrieve each column's value and store them as an Object array
+                Object[] paymentData = new Object[6];
+                paymentData[0] = rs.getInt("paymentID");
+                paymentData[1] = rs.getDouble("amountPaid");
+                paymentData[2] = rs.getString("paymentMethod");
+                paymentData[3] = rs.getString("meterUsed");
+                paymentData[4] = rs.getDouble("charges");
+                paymentData[5] = rs.getDate("paymentDate");
+
+                paymentHistoryList.add(paymentData);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return paymentHistoryList;
+}
+
 
 
 
