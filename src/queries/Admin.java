@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import wbs_2103.src.connector.DBConnect;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -91,5 +92,47 @@ public class Admin {
     }
     return clientMeterData;
 }
+      
+      public List<String[]> fetchPaymentHistoryData() {
+    String sql = """
+            SELECT c.clientID, c.clientName, SUM(ph.amountPaid) AS totalAmountPaid
+            FROM client c
+            LEFT JOIN paymenthistory ph ON c.clientID = ph.clientID
+            GROUP BY c.clientID, c.clientName
+            """;
+    List<String[]> paymentHistoryData = new ArrayList<>();
+
+    try (PreparedStatement stmt = connect.prepareStatement(sql)) {
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            String[] row = new String[3];  // 3 columns as per the SQL query
+            row[0] = rs.getString("clientID");
+            row[1] = rs.getString("clientName");
+            row[2] = rs.getString("totalAmountPaid"); // Get the summed amount
+            paymentHistoryData.add(row);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error fetching payment history: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    return paymentHistoryData;
+}
+      
+      public int fetchTotalClients() {
+    String sql = "SELECT COUNT(*) AS total_clients FROM client";
+    try (PreparedStatement stmt = connect.prepareStatement(sql)) {
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("total_clients");
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error fetching client count: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    return 0;
+}
+      
+     
 
 }
