@@ -35,10 +35,7 @@ public class ClientResidential extends javax.swing.JFrame {
         
         initComponents();
         loadMeterReadings(loggedInUserID);
-        
-        int clientID = SharedData.clientID; 
-        String billDetails = client.loadBillDetails(clientID);
-        residentialBill.setText(billDetails);
+
 
 
     }
@@ -71,6 +68,7 @@ public class ClientResidential extends javax.swing.JFrame {
         dateTodayLabel = new javax.swing.JLabel();
         currentReadingLabel = new javax.swing.JLabel();
         previousReadingLabel = new javax.swing.JLabel();
+        refresh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -177,6 +175,13 @@ public class ClientResidential extends javax.swing.JFrame {
         previousReadingLabel.setForeground(new java.awt.Color(0, 0, 0));
         previousReadingLabel.setText("Previous Reading");
 
+        refresh.setText("REFRESH BILL");
+        refresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout ResidentialPanelLayout = new javax.swing.GroupLayout(ResidentialPanel);
         ResidentialPanel.setLayout(ResidentialPanelLayout);
         ResidentialPanelLayout.setHorizontalGroup(
@@ -195,11 +200,16 @@ public class ClientResidential extends javax.swing.JFrame {
                                     .addComponent(previousReadingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(dateTodayLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                                .addGap(23, 23, 23)
-                                .addComponent(residentialBill, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
+                                        .addGap(23, 23, 23)
+                                        .addComponent(residentialBill, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(ResidentialPanelLayout.createSequentialGroup()
+                                        .addGap(90, 90, 90)
+                                        .addComponent(refresh)))
+                                .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(ResidentialPanelLayout.createSequentialGroup()
+                                        .addGap(84, 84, 84)
                                         .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -209,7 +219,7 @@ public class ClientResidential extends javax.swing.JFrame {
                                                     .addComponent(paymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addComponent(paymentField, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                                     .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                                        .addGap(88, 88, 88)
+                                        .addGap(154, 154, 154)
                                         .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -242,18 +252,20 @@ public class ClientResidential extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5)
+                    .addComponent(refresh))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(residentialBill, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(paymentField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(paymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(31, 31, 31)
-                        .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(residentialBill, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
@@ -329,6 +341,13 @@ public class ClientResidential extends javax.swing.JFrame {
         residentialBill.setText(billDetails);
     }//GEN-LAST:event_payButtonActionPerformed
 
+    private void refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshActionPerformed
+        // TODO add your handling code here:
+        int clientID = SharedData.clientID; 
+        String billDetails = client.loadBillDetails(clientID);
+        residentialBill.setText(billDetails);
+    }//GEN-LAST:event_refreshActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -371,35 +390,49 @@ public class ClientResidential extends javax.swing.JFrame {
         }
     }
     
-    private void processPayment() {
-       String paymentText = paymentField.getText().trim();
-       String selectedMethod = (String) paymentMethod.getSelectedItem();
-       double paymentAmount;
+private void processPayment() {
+    String paymentText = paymentField.getText().trim();
+    String selectedMethod = (String) paymentMethod.getSelectedItem();
+    double paymentAmount;
 
-       try {
-           paymentAmount = Double.parseDouble(paymentText); // Convert input to double
+    try {
+        paymentAmount = Double.parseDouble(paymentText); 
+        
+        int clientID = SharedData.clientID;
+        double amountDue = client.getAmountDue(clientID);
+        if (client.hasOutstandingBill(clientID)) {            
+            if (client.isPaymentSufficient(clientID, paymentAmount)) {
+                double meterUsed = client.getMeterUsed(meterID); 
+                client.insertPaymentIntoHistory(clientID, meterID, amountDue, selectedMethod, meterUsed);
+                client.removeBill(clientID);
 
-           int clientID = SharedData.clientID;
+                StringBuilder receipt = new StringBuilder();
+                receipt.append("Receipt\n");
+                receipt.append("Client ID: ").append(clientID).append("\n");
+                receipt.append("Meter ID: ").append(meterID).append("\n");
+                receipt.append("Payment Method: ").append(selectedMethod).append("\n");
+                receipt.append("Amount Due: ").append(amountDue).append("\n");
+                receipt.append("Payment Amount: ").append(paymentAmount).append("\n");
 
-           // Check if there is an outstanding bill
-           if (client.hasOutstandingBill(clientID)) {
-               if (client.isPaymentSufficient(clientID, paymentAmount)) {
-                   double meterUsed = client.getMeterUsed(meterID); // Replace with your method to get the meter used
-                   client.insertPaymentIntoHistory(clientID, meterID, paymentAmount, selectedMethod, meterUsed);
-                   client.removeBill(clientID);
-                   JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                   paymentField.setText("");
-                   paymentMethod.setSelectedIndex(0);
-               } else {
-                   JOptionPane.showMessageDialog(this, "Payment amount is insufficient.", "Error", JOptionPane.ERROR_MESSAGE);
-               }
-           } else {
-               JOptionPane.showMessageDialog(this, "No outstanding bill to pay.", "Error", JOptionPane.ERROR_MESSAGE);
-           }
-       } catch (NumberFormatException e) {
-           JOptionPane.showMessageDialog(this, "Please enter a valid payment amount.", "Error", JOptionPane.ERROR_MESSAGE);
-       }
-   }
+                if ("Cash".equalsIgnoreCase(selectedMethod)) {
+                    double change = paymentAmount - amountDue;
+                    receipt.append("Change: ").append(change).append("\n");
+                }
+
+                JOptionPane.showMessageDialog(this, receipt.toString(), "Payment Receipt", JOptionPane.INFORMATION_MESSAGE);
+
+                paymentField.setText("");
+                paymentMethod.setSelectedIndex(0);
+            } else {
+                JOptionPane.showMessageDialog(this, "Payment amount is insufficient.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No outstanding bill to pay.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Please enter a valid payment amount.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
 
 
     private void validatePaymentInput() {
@@ -464,6 +497,7 @@ public class ClientResidential extends javax.swing.JFrame {
     private javax.swing.JTextField paymentField;
     private javax.swing.JComboBox<String> paymentMethod;
     private javax.swing.JLabel previousReadingLabel;
+    private javax.swing.JButton refresh;
     protected javax.swing.JLabel residentialBill;
     private javax.swing.JLabel residentialUsage;
     private javax.swing.JPanel sidePanel;

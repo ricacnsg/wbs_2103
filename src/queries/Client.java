@@ -459,7 +459,7 @@ public class Client {
         return billDetails; // Return the formatted bill details
     }
 
-            private String formatBillDetails(String billingPeriod, double totalBill, double balance, double charges, double meterUsed, Timestamp lastUpdated) {
+    private String formatBillDetails(String billingPeriod, double totalBill, double balance, double charges, double meterUsed, Timestamp lastUpdated) {
             DecimalFormat df = new DecimalFormat("#,##0.00");
             String lastUpdatedStr = (lastUpdated != null) ? lastUpdated.toString() : "N/A";
 
@@ -552,8 +552,142 @@ public class Client {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error retrieving meter used: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        return 0; // Default value if not found
+        return 0; 
     }
+    
+    public double getAmountDue(int clientID) {
+    String query = "SELECT totalBill FROM bill WHERE clientID = ?";
+    double amountDue = 0.0;
+
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, clientID);
+
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            amountDue = rs.getDouble("totalBill"); // Get the amount due from the result set
+        }
+    } catch (SQLException e) {
+        e.printStackTrace(); // Handle exceptions appropriately
+    }
+    return amountDue; // Return the amount due
+}
+
+// icheck kung nagamit
+    public double getBillAmount(int meterID) {
+    double billAmount = 0.0;
+    String query = "SELECT totalBill FROM bill WHERE meterID = ?"; // Adjust the query according to your database schema
+
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, meterID);
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                billAmount = rs.getDouble("billAmount");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error retrieving bill amount: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    return billAmount;
+}
+    //for commercial billing
+    public String loadComBillDetails(int clientId, int meterId) {
+    String query = "SELECT billingPeriod, totalBill, balance, charges, meterUsed, lastUpdated " +
+                   "FROM bill WHERE clientID = ? AND meterID = ? ORDER BY lastUpdated DESC LIMIT 1";
+    String billDetails = ""; // Initialize the bill details string
+
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, clientId); 
+        stmt.setInt(2, meterId); 
+        
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                // Retrieve data from the result set
+                String billingPeriod = rs.getString("billingPeriod");
+                double totalBill = rs.getDouble("totalBill");
+                double balance = rs.getDouble("balance");
+                double charges = rs.getDouble("charges");
+                double meterUsed = rs.getDouble("meterUsed");
+                Timestamp lastUpdated = rs.getTimestamp("lastUpdated");
+
+                billDetails = formatBillDetails(billingPeriod, totalBill, balance, charges, meterUsed, lastUpdated);
+            } else {
+                billDetails = "No bill details found for the client and meter.";
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error fetching bill details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    return billDetails; 
+}
+    
+    public boolean hasOutstandingBill(int clientID, int meterID) {
+    String query = "SELECT COUNT(*) FROM bill WHERE clientid = ? AND meterid = ?";
+    
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, clientID);
+        stmt.setInt(2, meterID);
+        
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false; 
+}
+
+    public void removeBill(int clientID, int meterID) {
+    String query = "DELETE FROM bill WHERE clientID = ? AND meterID = ?";
+    
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, clientID);
+        stmt.setInt(2, meterID);
+        stmt.executeUpdate(); // Execute the deletion
+    } catch (SQLException e) {
+        e.printStackTrace(); // Handle exceptions appropriately
+    }
+}
+
+public boolean isPaymentSufficient(int clientID, int meterID, double paymentAmount) {
+    String query = "SELECT totalBill FROM bill WHERE clientID = ? AND meterID = ?";
+    
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, clientID);
+        stmt.setInt(2, meterID);
+        
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            double amountDue = rs.getDouble("totalBill");
+            return paymentAmount >= amountDue; // Check if payment meets or exceeds the amount due
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return false; 
+}
+
+public double getAmountDue(int clientID, int meterID) {
+    String query = "SELECT totalBill FROM bill WHERE clientID = ? AND meterID = ?";
+    double amountDue = 0.0;
+
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, clientID);
+        stmt.setInt(2, meterID);
+        
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            amountDue = rs.getDouble("totalBill"); // Get the amount due from the result set
+        }
+    } catch (SQLException e) {
+        e.printStackTrace(); // Handle exceptions appropriately
+    }
+    return amountDue; // Return the amount due
+}
+
 
 
 }
