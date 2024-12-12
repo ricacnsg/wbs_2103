@@ -35,6 +35,10 @@ public class ClientResidential extends javax.swing.JFrame {
         
         initComponents();
         loadMeterReadings(loggedInUserID);
+        
+        int clientID = SharedData.clientID; 
+        String billDetails = client.loadBillDetails(clientID);
+        residentialBill.setText(billDetails);
 
 
     }
@@ -136,6 +140,11 @@ public class ClientResidential extends javax.swing.JFrame {
         residentialBill.setText("VIEW BILL");
 
         payButton.setText("PAY BILL");
+        payButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                payButtonActionPerformed(evt);
+            }
+        });
 
         paymentField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -144,6 +153,11 @@ public class ClientResidential extends javax.swing.JFrame {
         });
 
         paymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Gcash", "Paymaya" }));
+        paymentMethod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                paymentMethodActionPerformed(evt);
+            }
+        });
 
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("INPUT PAYMENT");
@@ -271,6 +285,10 @@ public class ClientResidential extends javax.swing.JFrame {
         String clientName = client.getClientName(clientID);
         
         welcomeLabel.setText("Welcome, " + clientName + "!");
+        
+        String billDetails = client.loadBillDetails(clientID);
+        
+        residentialBill.setText(billDetails);
     }//GEN-LAST:event_tabbedPaneStateChanged
 
     private void logoutClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutClientActionPerformed
@@ -294,7 +312,22 @@ public class ClientResidential extends javax.swing.JFrame {
 
     private void paymentFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentFieldActionPerformed
         // TODO add your handling code here:
+        validatePaymentInput();
     }//GEN-LAST:event_paymentFieldActionPerformed
+
+    private void paymentMethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentMethodActionPerformed
+        // TODO add your handling code here:
+        validatePaymentInput();
+    }//GEN-LAST:event_paymentMethodActionPerformed
+
+    private void payButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payButtonActionPerformed
+        // TODO add your handling code here:
+        int clientID = SharedData.clientID; 
+        String clientName = client.getClientName(clientID);
+        processPayment();
+        String billDetails = client.loadBillDetails(clientID);
+        residentialBill.setText(billDetails);
+    }//GEN-LAST:event_payButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -336,6 +369,43 @@ public class ClientResidential extends javax.swing.JFrame {
         if (timer != null) {
             timer.stop();
         }
+    }
+    
+    private void processPayment() {
+       String paymentText = paymentField.getText().trim();
+       String selectedMethod = (String) paymentMethod.getSelectedItem();
+       double paymentAmount;
+
+       try {
+           paymentAmount = Double.parseDouble(paymentText); // Convert input to double
+
+           int clientID = SharedData.clientID;
+
+           // Check if there is an outstanding bill
+           if (client.hasOutstandingBill(clientID)) {
+               if (client.isPaymentSufficient(clientID, paymentAmount)) {
+                   double meterUsed = client.getMeterUsed(meterID); // Replace with your method to get the meter used
+                   client.insertPaymentIntoHistory(clientID, meterID, paymentAmount, selectedMethod, meterUsed);
+                   client.removeBill(clientID);
+                   JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                   paymentField.setText("");
+                   paymentMethod.setSelectedIndex(0);
+               } else {
+                   JOptionPane.showMessageDialog(this, "Payment amount is insufficient.", "Error", JOptionPane.ERROR_MESSAGE);
+               }
+           } else {
+               JOptionPane.showMessageDialog(this, "No outstanding bill to pay.", "Error", JOptionPane.ERROR_MESSAGE);
+           }
+       } catch (NumberFormatException e) {
+           JOptionPane.showMessageDialog(this, "Please enter a valid payment amount.", "Error", JOptionPane.ERROR_MESSAGE);
+       }
+   }
+
+
+    private void validatePaymentInput() {
+        String paymentText = paymentField.getText().trim();
+        String selectedMethod = (String) paymentMethod.getSelectedItem();
+        payButton.setEnabled(!paymentText.isEmpty() && !selectedMethod.equals("Select Payment Method"));
     }
 
 
@@ -394,7 +464,7 @@ public class ClientResidential extends javax.swing.JFrame {
     private javax.swing.JTextField paymentField;
     private javax.swing.JComboBox<String> paymentMethod;
     private javax.swing.JLabel previousReadingLabel;
-    private javax.swing.JLabel residentialBill;
+    protected javax.swing.JLabel residentialBill;
     private javax.swing.JLabel residentialUsage;
     private javax.swing.JPanel sidePanel;
     private javax.swing.JToggleButton switchButton;

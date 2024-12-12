@@ -13,6 +13,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import connector.DBConnect;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import javax.swing.JOptionPane;
+
 
 public class Client {
     private Connection connect;
@@ -422,7 +426,134 @@ public class Client {
         return false;
     }
 
+    //for retrieving bill
+        public String loadBillDetails(int clientId) {
+        // SQL query to retrieve the bill details for the given clientID
+        String query = "SELECT billingPeriod, totalBill, balance, charges, meterUsed, lastUpdated FROM bill WHERE clientID = ? ORDER BY lastUpdated DESC LIMIT 1";
+        String billDetails = ""; // Initialize the bill details string
 
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, clientId); // Set the clientID parameter
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Retrieve data from the result set
+                    String billingPeriod = rs.getString("billingPeriod");
+                    double totalBill = rs.getDouble("totalBill");
+                    double balance = rs.getDouble("balance");
+                    double charges = rs.getDouble("charges");
+                    double meterUsed = rs.getDouble("meterUsed");
+                    Timestamp lastUpdated = rs.getTimestamp("lastUpdated");
+
+                    // Format the data into a readable format
+                    billDetails = formatBillDetails(billingPeriod, totalBill, balance, charges, meterUsed, lastUpdated);
+                } else {
+                    // Handle case when no record is found
+                    billDetails = "No bill details found for the client.";
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error fetching bill details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return billDetails; // Return the formatted bill details
+    }
+
+            private String formatBillDetails(String billingPeriod, double totalBill, double balance, double charges, double meterUsed, Timestamp lastUpdated) {
+            DecimalFormat df = new DecimalFormat("#,##0.00");
+            String lastUpdatedStr = (lastUpdated != null) ? lastUpdated.toString() : "N/A";
+
+            return "<html>" +
+                    "Billing Period: " + billingPeriod + "<br>" +
+                    "Total Bill: $" + df.format(totalBill) + "<br>" +
+                    "Balance: $" + df.format(balance) + "<br>" +
+                    "Charges: $" + df.format(charges) + "<br>" +
+                    "Meter Used: " + meterUsed + " units<br>" +
+                    "Last Updated: " + lastUpdatedStr + "<br>" +
+                    "</html>";
+        }
+
+    public void insertPaymentIntoHistory(int clientID, int meterID, double amount, String method, double meterUsed) {
+        String query = "INSERT INTO paymenthistory (clientID, meterID, amountPaid, paymentMethod, paymentDate, meterUsed) VALUES (?, ?, ?, ?, NOW(), ?)"; // Adjust as necessary
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, clientID); // Set clientID
+            stmt.setInt(2, meterID); // Set meterID
+            stmt.setDouble(3, amount); // Set amount
+            stmt.setString(4, method); // Set payment method
+            stmt.setDouble(5, meterUsed); // Set meterUsed
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error processing payment: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
+    public boolean hasOutstandingBill(int clientID) {
+        String query = "SELECT COUNT(*) FROM bill WHERE clientID = ? AND balance > 0"; // Adjust as necessary
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, clientID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0; // Return true if there is at least one bill
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error checking outstanding bill: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return false; // No outstanding bill found
+    }
+
+    public boolean isPaymentSufficient(int clientID, double paymentAmount) {
+        String query = "SELECT totalBill FROM bill WHERE clientID = ? AND balance > 0 LIMIT 1"; // Adjust as necessary
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, clientID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    double totalBill = rs.getDouble("totalBill");
+                    return paymentAmount >= totalBill; // Check if payment covers the bill
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error checking payment sufficiency: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return false; // No bill found or payment insufficient
+    }
+
+
+    public void removeBill(int clientID) {
+        String query = "DELETE FROM bill WHERE clientID = ? AND balance > 0"; // Adjust as necessary
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, clientID);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error removing bill: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public double getMeterUsed(int meterID) {
+        String query = "SELECT meterUsed FROM bill WHERE meterID = ?"; // Adjust as necessary
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, meterID);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("meterUsed"); // Adjust according to your actual column name
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error retrieving meter used: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return 0; // Default value if not found
+    }
 
 
 }
