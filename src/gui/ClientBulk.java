@@ -126,13 +126,10 @@ public class ClientBulk extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("METER USAGE");
 
-        dateBulk.setForeground(new java.awt.Color(0, 0, 0));
         dateBulk.setText("Date Today: ");
 
-        prevSub.setForeground(new java.awt.Color(0, 0, 0));
         prevSub.setText("Previous Reading:");
 
-        currentSub.setForeground(new java.awt.Color(0, 0, 0));
         currentSub.setText("Current Reading:");
 
         switchCom.setText("Start Meter");
@@ -142,7 +139,6 @@ public class ClientBulk extends javax.swing.JFrame {
             }
         });
 
-        submetername.setForeground(new java.awt.Color(0, 0, 0));
         submetername.setText("Submeter Name:");
 
         submeterList.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -157,19 +153,14 @@ public class ClientBulk extends javax.swing.JFrame {
         scrollList.setViewportView(scrollPane);
 
         mainMeterLabel.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        mainMeterLabel.setForeground(new java.awt.Color(0, 0, 0));
         mainMeterLabel.setText("Main Meter");
 
-        prevMain.setForeground(new java.awt.Color(0, 0, 0));
         prevMain.setText("Previous Reading:");
 
-        currentMain.setForeground(new java.awt.Color(0, 0, 0));
         currentMain.setText("Current Reading:");
 
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("INPUT PAYMENT");
 
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("PAYMENT METHOD");
 
         paymentField.addActionListener(new java.awt.event.ActionListener() {
@@ -189,7 +180,6 @@ public class ClientBulk extends javax.swing.JFrame {
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createCompoundBorder());
 
-        billBulk.setForeground(new java.awt.Color(0, 0, 0));
         billBulk.setText("<html>VIEW BILL  ");
         billBulk.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jScrollPane1.setViewportView(billBulk);
@@ -330,7 +320,6 @@ public class ClientBulk extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(0, 153, 153));
 
         jLabel6.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("PAYMENT HISTORY");
 
         history.setModel(new javax.swing.table.DefaultTableModel(
@@ -629,27 +618,27 @@ public class ClientBulk extends javax.swing.JFrame {
     
     private void startSubmeter(int submeterID) {
         if (submeterTimers.containsKey(submeterID)) {
-            JOptionPane.showMessageDialog(this, "This submeter is already running!", "Info", JOptionPane.INFORMATION_MESSAGE);
-            return;
+        JOptionPane.showMessageDialog(this, "This submeter is already running!", "Info", JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
+
+    Timer timer = new Timer(1000, event -> {
+        double[] readings = client.getSubmeterReadings(submeterID);
+        readings[1] += 0.5;
+        client.updateSubCurrentReading(submeterID, readings[1]); 
+
+        client.updateMainMeterReading(meterID);
+
+        if (submeterList.getSelectedValue() != null && 
+            client.getSubmeterIDByName(meterID, submeterList.getSelectedValue()) == submeterID) {
+            currentSub.setText("Current Reading: " + String.format("%.2f", readings[1])); // Format to 2 decimal places
         }
+    });
 
-        Timer timer = new Timer(1000, event -> {
-            double[] readings = client.getSubmeterReadings(submeterID);
-            readings[1] += 0.5;
-            client.updateSubCurrentReading(submeterID, readings[1]); 
-
-            client.updateMainMeterReading(meterID);
-
-            if (submeterList.getSelectedValue() != null && 
-                client.getSubmeterIDByName(meterID, submeterList.getSelectedValue()) == submeterID) {
-                currentSub.setText("Current Reading: " + readings[1]);
-            }
-        });
-
-        timer.start();
-        submeterTimers.put(submeterID, timer); 
-        submeterStates.put(submeterID, true); 
-        switchCom.setText("Stop Meter");
+    timer.start();
+    submeterTimers.put(submeterID, timer); 
+    submeterStates.put(submeterID, true); 
+    switchCom.setText("Stop Meter");
     }
 
     private void stopSubmeter(int submeterID) {

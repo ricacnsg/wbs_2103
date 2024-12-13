@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import connector.DBConnect;
+import wbs_2103.src.connector.DBConnect;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import javax.swing.JOptionPane;
@@ -896,6 +896,24 @@ public List<Object[]> getPaymentHistory(int clientID) {
     }
     return paymentHistoryList;
 }
+
+ public void updateClientStatus(int clientID, String newStatus) {
+        String query = "UPDATE Client SET status = ? WHERE clientID = ?";
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setString(1, newStatus);
+            stmt.setInt(2, clientID);
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated > 0) {
+                JOptionPane.showMessageDialog(rootPane, "Client status updated successfully.");
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Failed to update client status.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(rootPane, "Error updating client status: " + e.getMessage());
+        }
+    }
+
 
 
 

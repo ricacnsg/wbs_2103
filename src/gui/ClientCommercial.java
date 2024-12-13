@@ -528,7 +528,7 @@ if (!evt.getValueIsAdjusting()) {
     }
     
 private void startMeter(int meterID) {
-    if (meterTimers.containsKey(meterID)) {
+       if (meterTimers.containsKey(meterID)) {
         JOptionPane.showMessageDialog(this, "This meter is already running!", "Info", JOptionPane.INFORMATION_MESSAGE);
         return;
     }
@@ -539,7 +539,9 @@ private void startMeter(int meterID) {
         client.updateCurrentReading(meterID, readings[1]); 
 
         if (listCom.getSelectedValue() != null && client.getMeterIDByMeterName(SharedData.clientID, listCom.getSelectedValue()) == meterID) {
-            currentCom.setText("Current Reading: " + readings[1]);
+            // Format the current reading to two decimal places
+            String formattedReading = String.format("%.2f", readings[1]);
+            currentCom.setText("Current Reading: " + formattedReading);
         }
     });
     timer.start();
