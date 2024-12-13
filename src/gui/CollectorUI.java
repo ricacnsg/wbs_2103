@@ -1,13 +1,15 @@
 
-package gui;
+package wbs_2103.src.gui;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import queries.Collector;
+import wbs_2103.src.queries.Collector;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import queries.Client;
+import static queries.SharedData.clientID;
 
 /**
  *
@@ -76,6 +78,9 @@ public class CollectorUI extends javax.swing.JFrame {
         send = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         hasLeak = new javax.swing.JCheckBox();
+        status = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        clientid = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(800, 500));
@@ -83,7 +88,6 @@ public class CollectorUI extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(0, 204, 204));
 
         jLabel1.setFont(new java.awt.Font("Serif", 1, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Collector Interface");
 
         logoutButton.setText("LOG OUT");
@@ -184,6 +188,15 @@ public class CollectorUI extends javax.swing.JFrame {
 
         hasLeak.setText("has leakage");
 
+        status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ACTIVE", "INACTIVE", " " }));
+        status.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                statusActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("ClientID");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -191,40 +204,52 @@ public class CollectorUI extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(162, 162, 162)
+                        .addGap(135, 135, 135)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(prevRead, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(billAmountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(30, 30, 30)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(prevRead, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(currentRead, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(42, 42, 42)
-                                        .addComponent(meterIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(81, 81, 81)
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(currentRead, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(hasLeak, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(198, 198, 198)
-                        .addComponent(calculate)
-                        .addGap(126, 126, 126)
-                        .addComponent(send)))
-                .addContainerGap(359, Short.MAX_VALUE))
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(81, 81, 81)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(clientid, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(meterIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                            .addGap(127, 127, 127)
+                            .addComponent(billAmountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(36, 36, 36)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(hasLeak, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(90, 90, 90))
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addComponent(calculate)
+                                    .addGap(176, 176, 176)
+                                    .addComponent(send))))))
+                .addGap(135, 400, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addGap(22, 22, 22)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(meterIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(clientid, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(meterIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(prevRead, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(currentRead, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -234,10 +259,12 @@ public class CollectorUI extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(hasLeak))
                 .addGap(18, 18, 18)
+                .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(calculate)
-                    .addComponent(send))
-                .addContainerGap(312, Short.MAX_VALUE))
+                    .addComponent(send)
+                    .addComponent(calculate))
+                .addContainerGap(215, Short.MAX_VALUE))
         );
 
         Collect.addTab("Reading Area", jPanel2);
@@ -288,6 +315,11 @@ public class CollectorUI extends javax.swing.JFrame {
 
     if (clientId != -1) {  
         if (collector.saveBillToDatabase(clientId, meterId, totalBill, charges, meterUsed)) {
+            // Update the client status based on the selected status in the combobox
+            String selectedStatus = (String) status.getSelectedItem();
+            Client client = new Client();
+            client.updateClientStatus(clientId, selectedStatus);
+
             JOptionPane.showMessageDialog(null, 
                 "Bill saved successfully.", 
                 "Success", 
@@ -317,6 +349,12 @@ public class CollectorUI extends javax.swing.JFrame {
         collector.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_logoutButtonActionPerformed
+
+    private void statusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusActionPerformed
+        String selectedStatus = (String) status.getSelectedItem();
+        Client client = new Client();
+        client.updateClientStatus(clientID, selectedStatus);
+    }//GEN-LAST:event_statusActionPerformed
 
     /**
      * @param args the command line arguments
@@ -416,11 +454,13 @@ private void calculateBillButton() {
     private javax.swing.JTabbedPane Collect;
     private javax.swing.JLabel billAmountLabel;
     private javax.swing.JButton calculate;
+    private javax.swing.JTextField clientid;
     private javax.swing.JLabel currentRead;
     private javax.swing.JCheckBox hasLeak;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -430,5 +470,8 @@ private void calculateBillButton() {
     private javax.swing.JTextField meterIDField;
     private javax.swing.JLabel prevRead;
     private javax.swing.JButton send;
+    private javax.swing.JComboBox<String> status;
     // End of variables declaration//GEN-END:variables
+
+
 }

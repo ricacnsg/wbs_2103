@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package gui;
+import java.text.DecimalFormat;
 import javax.swing.*;
 import javax.swing.JOptionPane;
 import queries.Client;
@@ -423,15 +424,21 @@ public class ClientResidential extends javax.swing.JFrame {
     }
 
     private void startMeter() {
-        isMeterRunning = true;
+    isMeterRunning = true;
         switchButton.setText("Stop Meter");
 
         // Assuming meterID is fetched or assigned earlier in the code
         meterID = client.getMeterID(loggedInUserID);
 
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
         timer = new Timer(1000, event -> {
             double[] readings = client.getMeterReadings(meterID);
             readings[1] += 0.1; // Increment by 0.1 for simulation
+
+            // Format the reading to 2 decimal places
+            readings[1] = Double.parseDouble(decimalFormat.format(readings[1]));
+
             client.updateCurrentReading(meterID, readings[1]);
 
             currentReadingLabel.setText("Current Reading: " + readings[1]);
