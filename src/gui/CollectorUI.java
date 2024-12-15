@@ -1,8 +1,8 @@
 
-package wbs_2103.src.gui;
+package gui;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import wbs_2103.src.queries.Collector;
+import queries.Collector;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.Map;
@@ -76,11 +76,12 @@ public class CollectorUI extends javax.swing.JFrame {
         meterIDField = new javax.swing.JTextField();
         calculate = new javax.swing.JButton();
         send = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
         hasLeak = new javax.swing.JCheckBox();
         status = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         clientid = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        udStatus = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(800, 500));
@@ -118,7 +119,7 @@ public class CollectorUI extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(36, 36, 36)
                         .addComponent(logoutButton)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(0, 153, 153));
@@ -131,13 +132,13 @@ public class CollectorUI extends javax.swing.JFrame {
 
         ClientRead.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ClientID", "Client Name", "MeterName", "MeterID", "MeterType", "Address", "Previous Reading", "Current Reading"
+                "ClientID", "Client Name", "MeterName", "MeterID", "MeterType", "Address", "Previous Reading", "Current Reading", "Last Payment"
             }
         ));
         jScrollPane2.setViewportView(ClientRead);
@@ -154,7 +155,7 @@ public class CollectorUI extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -177,18 +178,17 @@ public class CollectorUI extends javax.swing.JFrame {
             }
         });
 
-        send.setText("SEND");
+        send.setText("SEND TO CLIENT");
         send.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sendActionPerformed(evt);
             }
         });
 
-        jLabel3.setText("Leakage");
+        hasLeak.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        hasLeak.setText("has leakage?");
 
-        hasLeak.setText("has leakage");
-
-        status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ACTIVE", "INACTIVE", " " }));
+        status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ACTIVE", "INACTIVE" }));
         status.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 statusActionPerformed(evt);
@@ -197,74 +197,88 @@ public class CollectorUI extends javax.swing.JFrame {
 
         jLabel4.setText("ClientID");
 
+        jLabel3.setText("UPDATE CLIENT STATUS");
+
+        udStatus.setText("UPDATE STATUS");
+        udStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                udStatusActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(77, 77, 77)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(135, 135, 135)
+                        .addComponent(billAmountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(prevRead, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(currentRead, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(81, 81, 81)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(meterIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addComponent(hasLeak, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(calculate, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(currentRead, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(prevRead, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(clientid, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(meterIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                            .addGap(127, 127, 127)
-                            .addComponent(billAmountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(36, 36, 36)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(hasLeak, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(90, 90, 90))
-                                .addGroup(jPanel2Layout.createSequentialGroup()
-                                    .addComponent(calculate)
-                                    .addGap(176, 176, 176)
-                                    .addComponent(send))))))
-                .addGap(135, 400, Short.MAX_VALUE))
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(clientid, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(81, 81, 81))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(udStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(182, 182, 182))))))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(133, 133, 133)
+                .addComponent(send, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(meterIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(hasLeak, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(calculate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(clientid, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(23, 23, 23)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(clientid, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(meterIDField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(prevRead, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(currentRead, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(billAmountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3)
-                    .addComponent(hasLeak))
-                .addGap(18, 18, 18)
-                .addComponent(status, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(send)
-                    .addComponent(calculate))
-                .addContainerGap(215, Short.MAX_VALUE))
+                    .addComponent(currentRead, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(udStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(1, 1, 1)
+                .addComponent(prevRead, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(billAmountLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(send, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         Collect.addTab("Reading Area", jPanel2);
@@ -273,11 +287,17 @@ public class CollectorUI extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Collect)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Collect)
+                .addGap(14, 14, 14))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Collect, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Collect, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -294,54 +314,12 @@ public class CollectorUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void calculateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateActionPerformed
-        calculateBillButton();
-    }//GEN-LAST:event_calculateActionPerformed
-
-    private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
-         String meterId = meterIDField.getText();
-    double totalBill = billAmount + charges;  // Ensure totalBill includes charges
-    double meterUsed = currentReading - previousReading;  // Calculate meterUsed
-
-    int clientId = collector.fetchClientIDByMeterID(meterId);
-
-    if (clientId != -1) {  
-        if (collector.saveBillToDatabase(clientId, meterId, totalBill, charges, meterUsed)) {
-            // Update the client status based on the selected status in the combobox
-            String selectedStatus = (String) status.getSelectedItem();
-            Client client = new Client();
-            client.updateClientStatus(clientId, selectedStatus);
-
-            JOptionPane.showMessageDialog(null, 
-                "Bill saved successfully.", 
-                "Success", 
-                JOptionPane.INFORMATION_MESSAGE);
-            collector.updateMeterReading(meterId, currentReading);
-        } else {
-            JOptionPane.showMessageDialog(null, 
-                "Error saving the bill.", 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
-        }
-    } else {
-        JOptionPane.showMessageDialog(null, 
-            "No client found for the provided meter ID.", 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-    }
-    }//GEN-LAST:event_sendActionPerformed
-
-    private void CollectStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_CollectStateChanged
-        populateClientReadTable();
-    }//GEN-LAST:event_CollectStateChanged
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
         // TODO add your handling code here:
@@ -350,11 +328,60 @@ public class CollectorUI extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_logoutButtonActionPerformed
 
+    private void CollectStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_CollectStateChanged
+        populateClientReadTable();
+    }//GEN-LAST:event_CollectStateChanged
+
     private void statusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusActionPerformed
+
+    }//GEN-LAST:event_statusActionPerformed
+
+    private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
+        String meterId = meterIDField.getText();
+        double totalBill = billAmount + charges;  // Ensure totalBill includes charges
+        double meterUsed = currentReading - previousReading;  // Calculate meterUsed
+        
+        if (currentReading == previousReading){
+            JOptionPane.showMessageDialog(null,
+                "No bill to send",
+                "Reminder",
+                JOptionPane.INFORMATION_MESSAGE);
+                return;
+        }
+
+        int clientId = collector.fetchClientIDByMeterID(meterId);
+
+        if (clientId != -1) {
+            if (collector.saveBillToDatabase(clientId, meterId, totalBill, leakCharge, penaltyCharge, meterUsed)) {
+                JOptionPane.showMessageDialog(null,
+                    "Bill sent to client successfully.",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
+                collector.updateMeterReading(meterId, currentReading);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                    "Error sending the bill.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                "No client found for the provided meter ID.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_sendActionPerformed
+
+    private void calculateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateActionPerformed
+        calculateBillButton();
+    }//GEN-LAST:event_calculateActionPerformed
+
+    private void udStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_udStatusActionPerformed
         String selectedStatus = (String) status.getSelectedItem();
         Client client = new Client();
+        int clientID = Integer.parseInt(clientid.getText());
         client.updateClientStatus(clientID, selectedStatus);
-    }//GEN-LAST:event_statusActionPerformed
+    }//GEN-LAST:event_udStatusActionPerformed
 
     /**
      * @param args the command line arguments
@@ -386,20 +413,32 @@ private void calculateBillButton() {
     currentRead.setText("Current Reading: " + String.valueOf(currentReading));   // Set current reading
     billAmountLabel.setText("Bill Amount: " + billAmountStr);
 
-    // Calculate penalty and leak charges
-    String meterIdInput = meterIDField.getText();
-    int clientId = collector.fetchClientIDByMeterID(meterIdInput);
+    // Fetch client ID
+    int clientId = collector.fetchClientIDByMeterID(meterId);
 
+    // Reset charges
     penaltyCharge = 0;
     leakCharge = 0;
 
-    // Calculate penalty and leak charges...
-    
-    boolean leak = hasLeak.isSelected();
+    // Fetch last payment date
+    LocalDate lastPaymentDate = collector.fetchLastPaymentDate(clientId);
 
-    if (leak == true) {
+    // Determine penalty charge
+    if (lastPaymentDate != null) {
+        LocalDate today = LocalDate.now();
+        long overdueDays = ChronoUnit.DAYS.between(lastPaymentDate, today);
+
+        if (overdueDays > 30) {  // Apply penalty if overdue by more than 30 days
+            penaltyCharge = 50.0; // Set penalty charge amount
+        }
+    }
+
+    // Determine leak charges based on user selection
+    boolean leak = hasLeak.isSelected();
+    if (leak) {
         leakCharge = 30.0; 
     }
+
     // Calculate total charges
     charges = penaltyCharge + leakCharge;
 
@@ -407,11 +446,23 @@ private void calculateBillButton() {
     double totalBill = billAmount + charges;  // Update the total bill with charges
     String totalBillStr = String.format("%.2f", totalBill);
 
-    JOptionPane.showMessageDialog(null, 
-        "Total charges: " + charges + " pesos\nTotal Bill Amount: " + totalBillStr, 
-        "Total Charges", 
-        JOptionPane.INFORMATION_MESSAGE);
+    // Show breakdown of charges
+    StringBuilder breakdown = new StringBuilder();
+    breakdown.append("Charges Breakdown:\n");
+    breakdown.append("Penalty Charge: ").append(String.format("%.2f", penaltyCharge)).append(" pesos\n");
+    breakdown.append("Leak Charge: ").append(String.format("%.2f", leakCharge)).append(" pesos\n\n");
+    breakdown.append("Total Charges: ").append(String.format("%.2f", charges)).append(" pesos\n");
+    breakdown.append("Total Bill Amount: ").append(totalBillStr);
+
+    if (lastPaymentDate != null) {
+        breakdown.append("\nLast Payment Date: ").append(lastPaymentDate);
+    } else {
+        breakdown.append("\nLast Payment Date: No record found");
+    }
+
+    JOptionPane.showMessageDialog(null, breakdown.toString(), "Charges Breakdown", JOptionPane.INFORMATION_MESSAGE);
 }
+
 
 
 
@@ -471,6 +522,7 @@ private void calculateBillButton() {
     private javax.swing.JLabel prevRead;
     private javax.swing.JButton send;
     private javax.swing.JComboBox<String> status;
+    private javax.swing.JButton udStatus;
     // End of variables declaration//GEN-END:variables
 
 

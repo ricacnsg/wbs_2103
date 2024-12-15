@@ -79,13 +79,18 @@ public List<String[]> fetchClientMeterData() {
             m.meterType, 
             a.addressName AS address, 
             m.previousReading, 
-            m.currentReading
+            m.currentReading,
+            ph.paymentDate
         FROM 
             client c
         JOIN 
             meter m ON c.clientID = m.clientID
         JOIN 
             address a ON c.addressID = a.addressID
+        LEFT JOIN 
+            (SELECT meterID, MAX(paymentDate) AS paymentDate
+             FROM paymenthistory
+             GROUP BY meterID) ph ON m.meterID = ph.meterID
     """;
 
     List<String[]> clientMeterData = new ArrayList<>();
@@ -94,7 +99,7 @@ public List<String[]> fetchClientMeterData() {
          ResultSet rs = stmt.executeQuery()) {
 
         while (rs.next()) {
-            String[] row = new String[8];  // Adjusted the size of the row to match the columns
+            String[] row = new String[9];  // Adjusted the size of the row to match the new column count
             row[0] = String.valueOf(rs.getInt("clientID"));
             row[1] = rs.getString("clientName");
             row[2] = rs.getString("meterName");
@@ -103,6 +108,9 @@ public List<String[]> fetchClientMeterData() {
             row[5] = rs.getString("address");
             row[6] = String.valueOf(rs.getDouble("previousReading"));
             row[7] = String.valueOf(rs.getDouble("currentReading"));
+            row[8] = rs.getTimestamp("paymentDate") != null 
+                    ? rs.getTimestamp("paymentDate").toString() 
+                    : "No Payment Recorded";  // Handle null paymentDate
             clientMeterData.add(row);
         }
     } catch (SQLException e) {
@@ -112,6 +120,7 @@ public List<String[]> fetchClientMeterData() {
 
     return clientMeterData;
 }
+
 
 
 public Map<String, String> fetchMeterReadings(String meterId) {
@@ -145,10 +154,9 @@ public Map<String, String> fetchMeterReadings(String meterId) {
         
         int rowsAffected = stmt.executeUpdate();
         if (rowsAffected > 0) {
-            JOptionPane.showMessageDialog(null, "Meter reading updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
             return true;
         } else {
-            JOptionPane.showMessageDialog(null, "Meter ID not found. No update performed.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Meter ID not found.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     } catch (Exception e) {
@@ -177,26 +185,25 @@ public Map<String, String> fetchMeterReadings(String meterId) {
 }
 
      
-public boolean saveBillToDatabase(int clientId, String meterId, double totalBill, double charges, double meterUsed) {
+public boolean saveBillToDatabase(int clientId, String meterId, double totalBill, double leakCharge, double overdueCharge, double meterUsed) {
     String billingPeriod = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-    
     Timestamp lastUpdated = Timestamp.valueOf(LocalDateTime.now());
     
-    double balance = totalBill + charges;
+    double balance = totalBill + leakCharge + overdueCharge;
 
-    String query = "INSERT INTO bill (clientID, meterID, billingPeriod, totalBill, charges, balance, lastUpdated, meterUsed) " +
-                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    String query = "INSERT INTO bill (clientID, meterID, billingPeriod, totalBill, leakCharge, overdueCharge, balance, lastUpdated, meterUsed) " +
+                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     try (PreparedStatement stmt = connect.prepareStatement(query)) {
-        // Set the prepared statement parameters
         stmt.setInt(1, clientId);
         stmt.setString(2, meterId);
-        stmt.setString(3, billingPeriod);  // Set billingPeriod
-        stmt.setDouble(4, totalBill);      // Set totalBill
-        stmt.setDouble(5, charges);        // Set charges
-        stmt.setDouble(6, balance);        // Set balance
-        stmt.setTimestamp(7, lastUpdated); // Set lastUpdated
-        stmt.setDouble(8, meterUsed);      // Set meterUsed
+        stmt.setString(3, billingPeriod);      
+        stmt.setDouble(4, totalBill);          
+        stmt.setDouble(5, leakCharge);         
+        stmt.setDouble(6, overdueCharge);      
+        stmt.setDouble(7, balance);            
+        stmt.setTimestamp(8, lastUpdated);     
+        stmt.setDouble(9, meterUsed);          
 
         int rowsAffected = stmt.executeUpdate();
 
@@ -208,6 +215,7 @@ public boolean saveBillToDatabase(int clientId, String meterId, double totalBill
         return false;
     }
 }
+
 
 
 
@@ -230,6 +238,29 @@ public boolean saveBillToDatabase(int clientId, String meterId, double totalBill
         return null;
     }
 
+    public LocalDate fetchLastPaymentDate(int clientId) {
+    String query = "SELECT MAX(paymentDate) AS lastPaymentDate FROM paymenthistory WHERE clientID = ?";
+    
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, clientId);  // Bind the clientID to the query
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                Date lastPaymentDate = rs.getDate("lastPaymentDate");
+                if (lastPaymentDate != null) {
+                    return lastPaymentDate.toLocalDate();  // Convert SQL Date to LocalDate
+                }
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, 
+            "Error fetching last payment date: " + e.getMessage(), 
+            "Database Error", 
+            JOptionPane.ERROR_MESSAGE);
+    }
+
+    return null;  // Return null if no payment date is found
+}
 
    
     /* 

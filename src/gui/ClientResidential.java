@@ -38,11 +38,8 @@ public class ClientResidential extends javax.swing.JFrame {
         
         initComponents();
         loadMeterReadings(loggedInUserID);
-
-
-
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -61,7 +58,6 @@ public class ClientResidential extends javax.swing.JFrame {
         welcomeLabel = new javax.swing.JLabel();
         switchButton = new javax.swing.JToggleButton();
         residentialUsage = new javax.swing.JLabel();
-        residentialBill = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         payButton = new javax.swing.JButton();
         paymentField = new javax.swing.JTextField();
@@ -72,6 +68,8 @@ public class ClientResidential extends javax.swing.JFrame {
         currentReadingLabel = new javax.swing.JLabel();
         previousReadingLabel = new javax.swing.JLabel();
         refresh = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        residentialBill = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -98,14 +96,14 @@ public class ClientResidential extends javax.swing.JFrame {
         sidePanel.setLayout(sidePanelLayout);
         sidePanelLayout.setHorizontalGroup(
             sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sidePanelLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(logoutClient)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(sidePanelLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(logoutClient)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         sidePanelLayout.setVerticalGroup(
             sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -140,12 +138,7 @@ public class ClientResidential extends javax.swing.JFrame {
         });
 
         residentialUsage.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        residentialUsage.setForeground(new java.awt.Color(0, 0, 0));
         residentialUsage.setText("METER USAGE");
-
-        residentialBill.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
-        residentialBill.setForeground(new java.awt.Color(0, 0, 0));
-        residentialBill.setText("VIEW BILL");
 
         payButton.setText("PAY BILL");
         payButton.addActionListener(new java.awt.event.ActionListener() {
@@ -167,22 +160,17 @@ public class ClientResidential extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("INPUT PAYMENT");
 
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("SELECT PAYMENT METHOD");
 
         dateTodayLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        dateTodayLabel.setForeground(new java.awt.Color(0, 0, 0));
         dateTodayLabel.setText("Date Today");
 
         currentReadingLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        currentReadingLabel.setForeground(new java.awt.Color(0, 0, 0));
         currentReadingLabel.setText("Current Reading");
 
         previousReadingLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        previousReadingLabel.setForeground(new java.awt.Color(0, 0, 0));
         previousReadingLabel.setText("Previous Reading");
 
         refresh.setText("REFRESH BILL");
@@ -191,6 +179,10 @@ public class ClientResidential extends javax.swing.JFrame {
                 refreshActionPerformed(evt);
             }
         });
+
+        residentialBill.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
+        residentialBill.setText("VIEW BILL");
+        jScrollPane3.setViewportView(residentialBill);
 
         javax.swing.GroupLayout ResidentialPanelLayout = new javax.swing.GroupLayout(ResidentialPanel);
         ResidentialPanel.setLayout(ResidentialPanelLayout);
@@ -212,11 +204,12 @@ public class ClientResidential extends javax.swing.JFrame {
                             .addGroup(ResidentialPanelLayout.createSequentialGroup()
                                 .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                                        .addGap(23, 23, 23)
-                                        .addComponent(residentialBill, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(ResidentialPanelLayout.createSequentialGroup()
                                         .addGap(90, 90, 90)
-                                        .addComponent(refresh)))
+                                        .addComponent(refresh))
+                                    .addGroup(ResidentialPanelLayout.createSequentialGroup()
+                                        .addGap(28, 28, 28)
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(21, 21, 21)
                                 .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(ResidentialPanelLayout.createSequentialGroup()
                                         .addGap(84, 84, 84)
@@ -275,8 +268,8 @@ public class ClientResidential extends javax.swing.JFrame {
                         .addComponent(paymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(31, 31, 31)
                         .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(residentialBill, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(47, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("RESIDENTIAL", ResidentialPanel);
@@ -299,7 +292,6 @@ public class ClientResidential extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jScrollPane1);
 
         jLabel2.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("PAYMENT HISTORY");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -378,6 +370,13 @@ public class ClientResidential extends javax.swing.JFrame {
         } else {
             stopMeter();
         }
+        
+        int clientID = SharedData.clientID;
+        String status = client.fetchClientStatus(clientID);
+        if(status.equalsIgnoreCase("INACTIVE")){
+            switchButton.setEnabled(false);
+            residentialUsage.setText("You are inactive, you can't open your meter.");
+        }
     }//GEN-LAST:event_switchButtonActionPerformed
 
     private void paymentFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentFieldActionPerformed
@@ -410,11 +409,6 @@ public class ClientResidential extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     
-    private void disableOtherTabsExcept(int indexToEnable) {
-        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            tabbedPane.setEnabledAt(i, i == indexToEnable);
-        }
-    }
     
     public void loadMeterReadings(int clientID) {
         double[] readings = client.getMeterReadings(clientID);
@@ -427,16 +421,14 @@ public class ClientResidential extends javax.swing.JFrame {
     isMeterRunning = true;
         switchButton.setText("Stop Meter");
 
-        // Assuming meterID is fetched or assigned earlier in the code
         meterID = client.getMeterID(loggedInUserID);
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
         timer = new Timer(1000, event -> {
             double[] readings = client.getMeterReadings(meterID);
-            readings[1] += 0.1; // Increment by 0.1 for simulation
+            readings[1] += 0.1; 
 
-            // Format the reading to 2 decimal places
             readings[1] = Double.parseDouble(decimalFormat.format(readings[1]));
 
             client.updateCurrentReading(meterID, readings[1]);
@@ -460,27 +452,39 @@ private void processPayment() {
     double paymentAmount;
 
     try {
-        paymentAmount = Double.parseDouble(paymentText); 
-        
+        paymentAmount = Double.parseDouble(paymentText);
+
         int clientID = SharedData.clientID;
-        double amountDue = client.getAmountDue(clientID);
-        if (client.hasOutstandingBill(clientID)) {            
+        double amountDue = client.getAmountDue(clientID); 
+        double leakCharge = client.getLeakCharge(clientID); 
+        double overdueCharge = client.getOverdueCharge(clientID); 
+        double meterUsed = client.getMeterUsed(meterID); 
+
+        if (client.hasOutstandingBill(clientID)) {
             if (client.isPaymentSufficient(clientID, paymentAmount)) {
-                double meterUsed = client.getMeterUsed(meterID); 
+
                 client.insertPaymentIntoHistory(clientID, meterID, amountDue, selectedMethod, meterUsed);
+
                 client.removeBill(clientID);
 
                 StringBuilder receipt = new StringBuilder();
                 receipt.append("Receipt\n");
+                receipt.append("---------------------------\n");
                 receipt.append("Client ID: ").append(clientID).append("\n");
                 receipt.append("Meter ID: ").append(meterID).append("\n");
                 receipt.append("Payment Method: ").append(selectedMethod).append("\n");
-                receipt.append("Amount Due: ").append(amountDue).append("\n");
-                receipt.append("Payment Amount: ").append(paymentAmount).append("\n");
+                receipt.append("Amount Due: ").append(String.format("%.2f", amountDue)).append(" pesos\n");
+                receipt.append("Meter Used: ").append(String.format("%.2f", meterUsed)).append(" cubic meters\n");
+                receipt.append("---------------------------\n");
+                receipt.append("Breakdown of Charges:\n");
+                receipt.append("  - Leak Charge: ").append(String.format("%.2f", leakCharge)).append(" pesos\n");
+                receipt.append("  - Overdue Charge: ").append(String.format("%.2f", overdueCharge)).append(" pesos\n");
+                receipt.append("---------------------------\n");
+                receipt.append("Payment Amount: ").append(String.format("%.2f", paymentAmount)).append(" pesos\n");
 
                 if ("Cash".equalsIgnoreCase(selectedMethod)) {
                     double change = paymentAmount - amountDue;
-                    receipt.append("Change: ").append(change).append("\n");
+                    receipt.append("Change: ").append(String.format("%.2f", change)).append(" pesos\n");
                 }
 
                 JOptionPane.showMessageDialog(this, receipt.toString(), "Payment Receipt", JOptionPane.INFORMATION_MESSAGE);
@@ -498,7 +502,6 @@ private void processPayment() {
     }
 }
 
-
     private void validatePaymentInput() {
         String paymentText = paymentField.getText().trim();
         String selectedMethod = (String) paymentMethod.getSelectedItem();
@@ -509,17 +512,14 @@ private void processPayment() {
         int clientID = SharedData.clientID;
         List<Object[]> paymentHistoryList = client.getPaymentHistory(clientID);
 
-        // Column names for the table
         String[] columnNames = {"Payment ID", "Amount Paid", "Payment Method", "Meter Used", "Charges", "Payment Date"};
 
-        // Convert List<Object[]> to 2D array for the table
         Object[][] data = new Object[paymentHistoryList.size()][6];
 
         for (int i = 0; i < paymentHistoryList.size(); i++) {
-            data[i] = paymentHistoryList.get(i);  // Directly assign each row's data
+            data[i] = paymentHistoryList.get(i); 
         }
 
-        // Set the table model with data and column names
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         history.setModel(model);
     }
@@ -578,6 +578,7 @@ private void processPayment() {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton logoutClient;
