@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import wbs_2103.src.connector.DBConnect;
+import connector.DBConnect;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import javax.swing.JOptionPane;
@@ -426,62 +426,64 @@ public class Client {
         return false;
     }
 
-    //for retrieving bill
+    //for retrieving bill in residential
         public String loadBillDetails(int clientId) {
-        // SQL query to retrieve the bill details for the given clientID
-        String query = "SELECT billingPeriod, totalBill, balance, charges, meterUsed, lastUpdated FROM bill WHERE clientID = ? ORDER BY lastUpdated DESC LIMIT 1";
-        String billDetails = ""; // Initialize the bill details string
+    String query = "SELECT billingPeriod, totalBill, balance, leakCharge, overdueCharge, meterUsed, lastUpdated FROM bill WHERE clientID = ? ORDER BY lastUpdated DESC LIMIT 1";
+    String billDetails = ""; 
 
-        try (PreparedStatement stmt = connect.prepareStatement(query)) {
-            stmt.setInt(1, clientId); // Set the clientID parameter
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    // Retrieve data from the result set
-                    String billingPeriod = rs.getString("billingPeriod");
-                    double totalBill = rs.getDouble("totalBill");
-                    double balance = rs.getDouble("balance");
-                    double charges = rs.getDouble("charges");
-                    double meterUsed = rs.getDouble("meterUsed");
-                    Timestamp lastUpdated = rs.getTimestamp("lastUpdated");
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, clientId); 
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                String billingPeriod = rs.getString("billingPeriod");
+                double totalBill = rs.getDouble("totalBill");
+                double balance = rs.getDouble("balance");
+                double leakCharge = rs.getDouble("leakCharge");
+                double overdueCharge = rs.getDouble("overdueCharge");
+                double meterUsed = rs.getDouble("meterUsed");
+                Timestamp lastUpdated = rs.getTimestamp("lastUpdated");
 
-                    // Format the data into a readable format
-                    billDetails = formatBillDetails(billingPeriod, totalBill, balance, charges, meterUsed, lastUpdated);
-                } else {
-                    // Handle case when no record is found
-                    billDetails = "No bill details found for the client.";
-                }
+                // Calculate total charges from the individual components
+                double totalCharges = leakCharge + overdueCharge;
+
+                // Format the data into a readable format
+                billDetails = formatBillDetails(billingPeriod, totalBill, balance, totalCharges, leakCharge, overdueCharge, meterUsed, lastUpdated);
+            } else {
+                billDetails = "No bill details found for the client.";
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error fetching bill details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        return billDetails; // Return the formatted bill details
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error fetching bill details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    private String formatBillDetails(String billingPeriod, double totalBill, double balance, double charges, double meterUsed, Timestamp lastUpdated) {
-            DecimalFormat df = new DecimalFormat("#,##0.00");
-            String lastUpdatedStr = (lastUpdated != null) ? lastUpdated.toString() : "N/A";
+    return billDetails; 
+}
 
-            return "<html>" +
-                    "Billing Period: " + billingPeriod + "<br>" +
-                    "Total Bill: $" + df.format(totalBill) + "<br>" +
-                    "Balance: $" + df.format(balance) + "<br>" +
-                    "Charges: $" + df.format(charges) + "<br>" +
-                    "Meter Used: " + meterUsed + " units<br>" +
-                    "Last Updated: " + lastUpdatedStr + "<br>" +
-                    "</html>";
-        }
+
+    private String formatBillDetails(String billingPeriod, double totalBill, double balance, double totalCharges, 
+                                     double leakCharge, double overdueCharge, double meterUsed, Timestamp lastUpdated) {
+        return "<html>" +
+               "Billing Period: " + billingPeriod + "<br>" +
+               "Total Bill: " + String.format("%.2f", totalBill) + " pesos<br>" +
+               "Balance: " + String.format("%.2f", balance) + " pesos<br>" +
+               "Meter Used: " + String.format("%.2f", meterUsed) + " cubic meters<br>" +
+               "Leak Charge: " + String.format("%.2f", leakCharge) + " pesos<br>" +
+               "Overdue Charge: " + String.format("%.2f", overdueCharge) + " pesos<br>" +
+               "Total Charges: " + String.format("%.2f", totalCharges) + " pesos<br>" +
+               "Last Updated: " + lastUpdated.toString() +
+               "</html>";
+    }
 
     public void insertPaymentIntoHistory(int clientID, int meterID, double amount, String method, double meterUsed) {
         String query = "INSERT INTO paymenthistory (clientID, meterID, amountPaid, paymentMethod, paymentDate, meterUsed) VALUES (?, ?, ?, ?, NOW(), ?)"; // Adjust as necessary
 
         try (PreparedStatement stmt = connect.prepareStatement(query)) {
-            stmt.setInt(1, clientID); // Set clientID
-            stmt.setInt(2, meterID); // Set meterID
-            stmt.setDouble(3, amount); // Set amount
-            stmt.setString(4, method); // Set payment method
-            stmt.setDouble(5, meterUsed); // Set meterUsed
+            stmt.setInt(1, clientID); 
+            stmt.setInt(2, meterID); 
+            stmt.setDouble(3, amount); 
+            stmt.setString(4, method); 
+            stmt.setDouble(5, meterUsed); 
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -497,14 +499,14 @@ public class Client {
             stmt.setInt(1, clientID);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt(1) > 0; // Return true if there is at least one bill
+                    return rs.getInt(1) > 0;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error checking outstanding bill: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        return false; // No outstanding bill found
+        return false; 
     }
 
     public boolean isPaymentSufficient(int clientID, double paymentAmount) {
@@ -515,14 +517,15 @@ public class Client {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     double totalBill = rs.getDouble("totalBill");
-                    return paymentAmount >= totalBill; // Check if payment covers the bill
+                    double tolerance = 0.01;
+                    return paymentAmount + tolerance >= totalBill; // Check if payment covers the bill
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error checking payment sufficiency: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-        return false; // No bill found or payment insufficient
+        return false;
     }
 
 
@@ -545,7 +548,7 @@ public class Client {
             stmt.setInt(1, meterID);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getDouble("meterUsed"); // Adjust according to your actual column name
+                    return rs.getDouble("meterUsed"); 
                 }
             }
         } catch (SQLException e) {
@@ -564,12 +567,12 @@ public class Client {
 
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
-            amountDue = rs.getDouble("totalBill"); // Get the amount due from the result set
+            amountDue = rs.getDouble("totalBill"); 
         }
     } catch (SQLException e) {
-        e.printStackTrace(); // Handle exceptions appropriately
+        e.printStackTrace(); 
     }
-    return amountDue; // Return the amount due
+    return amountDue; 
 }
 
 // icheck kung nagamit
@@ -592,37 +595,48 @@ public class Client {
 }
     //for commercial billing
     public String loadComBillDetails(int clientId, int meterId) {
-    String query = "SELECT billingPeriod, totalBill, balance, charges, meterUsed, lastUpdated " +
-                   "FROM bill WHERE clientID = ? AND meterID = ? ORDER BY lastUpdated DESC LIMIT 1";
-    String billDetails = ""; // Initialize the bill details string
+        String query = "SELECT billingPeriod, totalBill, balance, leakCharge, overdueCharge, meterUsed, lastUpdated " +
+                       "FROM bill WHERE clientID = ? AND meterID = ? ORDER BY lastUpdated DESC LIMIT 1";
+        String billDetails = ""; 
 
-    try (PreparedStatement stmt = connect.prepareStatement(query)) {
-        stmt.setInt(1, clientId); 
-        stmt.setInt(2, meterId); 
-        
-        try (ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
-                // Retrieve data from the result set
-                String billingPeriod = rs.getString("billingPeriod");
-                double totalBill = rs.getDouble("totalBill");
-                double balance = rs.getDouble("balance");
-                double charges = rs.getDouble("charges");
-                double meterUsed = rs.getDouble("meterUsed");
-                Timestamp lastUpdated = rs.getTimestamp("lastUpdated");
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, clientId); 
+            stmt.setInt(2, meterId); 
 
-                billDetails = formatBillDetails(billingPeriod, totalBill, balance, charges, meterUsed, lastUpdated);
-            } else {
-                billDetails = "No bill details found for the client and meter.";
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String billingPeriod = rs.getString("billingPeriod");
+                    double totalBill = rs.getDouble("totalBill");
+                    double balance = rs.getDouble("balance");
+                    double leakCharge = rs.getDouble("leakCharge");
+                    double overdueCharge = rs.getDouble("overdueCharge");
+                    double meterUsed = rs.getDouble("meterUsed");
+                    Timestamp lastUpdated = rs.getTimestamp("lastUpdated");
+                    
+                    double totalCharges = leakCharge + overdueCharge;
+
+                    billDetails = formatBillDetails(
+                        billingPeriod, 
+                        totalBill, 
+                        balance, 
+                        totalCharges, 
+                        leakCharge, 
+                        overdueCharge, 
+                        meterUsed, 
+                        lastUpdated
+                    );
+                } else {
+                    billDetails = "No bill details found for the client and meter.";
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error fetching bill details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(null, "Error fetching bill details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+        return billDetails; 
     }
 
-    return billDetails; 
-}
-    
     public boolean hasOutstandingBill(int clientID, int meterID) {
     String query = "SELECT COUNT(*) FROM bill WHERE clientid = ? AND meterid = ?";
     
@@ -646,9 +660,9 @@ public class Client {
     try (PreparedStatement stmt = connect.prepareStatement(query)) {
         stmt.setInt(1, clientID);
         stmt.setInt(2, meterID);
-        stmt.executeUpdate(); // Execute the deletion
+        stmt.executeUpdate(); 
     } catch (SQLException e) {
-        e.printStackTrace(); // Handle exceptions appropriately
+        e.printStackTrace(); 
     }
 }
 
@@ -662,7 +676,7 @@ public boolean isPaymentSufficient(int clientID, int meterID, double paymentAmou
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
             double amountDue = rs.getDouble("totalBill");
-            return paymentAmount >= amountDue; // Check if payment meets or exceeds the amount due
+            return paymentAmount >= amountDue; 
         }
     } catch (SQLException e) {
         e.printStackTrace();
@@ -680,76 +694,69 @@ public double getAmountDue(int clientID, int meterID) {
         
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
-            amountDue = rs.getDouble("totalBill"); // Get the amount due from the result set
+            amountDue = rs.getDouble("totalBill");
         }
     } catch (SQLException e) {
-        e.printStackTrace(); // Handle exceptions appropriately
+        e.printStackTrace();
     }
-    return amountDue; // Return the amount due
+    return amountDue; 
 }
 
 // payment for bulk
 public String loadBulkBillDetails(int clientId, int meterId) {
-    // Query to fetch readings from the meter table
     String mainQuery = "SELECT previousReading, currentReading FROM meter WHERE meterID = ?";
-
-    // Query to fetch billing details for the main meter
-    String mainMeterQuery = "SELECT billingPeriod, totalBill, balance, charges, meterUsed, lastUpdated, meterUsed " +
+    String mainMeterQuery = "SELECT billingPeriod, totalBill, balance, meterUsed, lastUpdated, " +
+                            "leakCharge, overdueCharge " +
                             "FROM bill WHERE clientID = ? AND meterID = ? ORDER BY lastUpdated DESC LIMIT 1";
-
-    // Query to fetch submeter details
     String submeterQuery = "SELECT submeterID, submeterLocation, previousReading, currentReading " +
                            "FROM submeter WHERE primaryMeterID = ?";
 
     StringBuilder billDetails = new StringBuilder();
 
     try (
-        // Prepare statements
-        PreparedStatement mainMeterStmt = connect.prepareStatement(mainMeterQuery);
         PreparedStatement meterStmt = connect.prepareStatement(mainQuery);
+        PreparedStatement mainMeterStmt = connect.prepareStatement(mainMeterQuery);
     ) {
-        // Fetch main meter readings from the meter table
+        // Fetch main meter readings
         meterStmt.setInt(1, meterId);
-        double mainPreviousReading = 0;
-        double mainCurrentReading = 0;
-        double mainConsumption = 0;
+        double mainPreviousReading = 0, mainCurrentReading = 0, mainConsumption = 0;
 
         try (ResultSet meterRs = meterStmt.executeQuery()) {
             if (meterRs.next()) {
                 mainPreviousReading = meterRs.getDouble("previousReading");
                 mainCurrentReading = meterRs.getDouble("currentReading");
+                mainConsumption = mainCurrentReading - mainPreviousReading;
             } else {
-                return "No readings found for the main meter.";
+                return "<html><body><p>No readings found for the main meter.</p></body></html>";
             }
         }
 
-        // Fetch main meter billing details
+        // Fetch main meter bill details
         mainMeterStmt.setInt(1, clientId);
         mainMeterStmt.setInt(2, meterId);
 
         try (ResultSet mainRs = mainMeterStmt.executeQuery()) {
             if (mainRs.next()) {
-                // Retrieve main meter details
                 String billingPeriod = mainRs.getString("billingPeriod");
                 double totalBill = mainRs.getDouble("totalBill");
                 double balance = mainRs.getDouble("balance");
-                double charges = mainRs.getDouble("charges");
+                double leakCharge = mainRs.getDouble("leakCharge");
+                double overdueCharge = mainRs.getDouble("overdueCharge");
                 Timestamp lastUpdated = mainRs.getTimestamp("lastUpdated");
-                mainConsumption = mainRs.getDouble("meterUsed");
+                double totalCharges = leakCharge + overdueCharge;
 
-                // Append main meter details
                 billDetails.append("<html><body>")
                     .append("<h3>Main Meter Details</h3>")
-                    .append("<p>Billing Period: ").append(billingPeriod).append("</p>")
-                    //.append("<p>Previous Reading: ").append(mainPreviousReading).append("</p>")
-                    //.append("<p>Current Reading: ").append(mainCurrentReading).append("</p>")
+                    .append("<p>Billing Period: ").append(billingPeriod != null ? billingPeriod : "N/A").append("</p>")
                     .append("<p>Consumption: ").append(mainConsumption).append(" units</p>")
-                    .append("<p>Total Bill: ").append(totalBill).append("</p>")
-                    .append("<p>Balance: ").append(balance).append("</p>")
-                    .append("<p>Additional Charges: ").append(charges).append("</p>")
-                    .append("<p>Last Updated: ").append(lastUpdated).append("</p>");
+                    .append("<p>Total Bill: ").append(String.format("%.2f", totalBill)).append("</p>")
+                    .append("<p>Balance: ").append(String.format("%.2f", balance)).append("</p>")
+                    .append("<p>Leak Charge: ").append(String.format("%.2f", leakCharge)).append("</p>")
+                    .append("<p>Overdue Charge: ").append(String.format("%.2f", overdueCharge)).append("</p>")
+                    .append("<p>Total Charges: ").append(String.format("%.2f", totalCharges)).append("</p>")
+                    .append("<p>Last Updated: ").append(lastUpdated != null ? lastUpdated.toString() : "N/A").append("</p>");
             } else {
-                return "No main meter bill details found for the client and meter.";
+                return "<html><body><p>No main meter bill details found for the client and meter.</p></body></html>";
             }
         }
 
@@ -761,17 +768,15 @@ public String loadBulkBillDetails(int clientId, int meterId) {
                 billDetails.append("<h3>Submeter Details</h3>");
 
                 boolean hasSubmeters = false;
-
                 while (subRs.next()) {
                     hasSubmeters = true;
                     String submeterName = subRs.getString("submeterLocation");
                     double subPreviousReading = subRs.getDouble("previousReading");
                     double subCurrentReading = subRs.getDouble("currentReading");
-
                     double subConsumption = subCurrentReading - subPreviousReading;
 
                     billDetails.append("<p>")
-                        .append("Submeter Name: ").append(submeterName).append("<br>")
+                        .append("Submeter Name: ").append(submeterName != null ? submeterName : "N/A").append("<br>")
                         .append("Previous Reading: ").append(subPreviousReading).append("<br>")
                         .append("Current Reading: ").append(subCurrentReading).append("<br>")
                         .append("Consumption: ").append(subConsumption).append(" units</p>");
@@ -788,11 +793,12 @@ public String loadBulkBillDetails(int clientId, int meterId) {
     } catch (SQLException e) {
         e.printStackTrace();
         JOptionPane.showMessageDialog(null, "Error fetching bill details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        return "Error fetching bill details.";
+        return "<html><body><p>Error fetching bill details.</p></body></html>";
     }
 
     return billDetails.toString();
 }
+
 
 public void processPayment(int clientId, int meterId, double paymentAmount, String paymentMethod) {
     String billQuery = "SELECT totalBill, charges, meterUsed FROM bill WHERE clientID = ? AND meterID = ? ORDER BY lastUpdated DESC LIMIT 1";
@@ -819,7 +825,6 @@ public void processPayment(int clientId, int meterId, double paymentAmount, Stri
                     change = paymentAmount - totalBill;
                 }
 
-                // Insert payment into paymentHistory
                 try (PreparedStatement insertStmt = connect.prepareStatement(insertPaymentQuery)) {
                     insertStmt.setInt(1, clientId);
                     insertStmt.setInt(2, meterId);
@@ -831,14 +836,12 @@ public void processPayment(int clientId, int meterId, double paymentAmount, Stri
                     insertStmt.executeUpdate();
                 }
 
-                // Remove the bill from the bill table
                 try (PreparedStatement removeStmt = connect.prepareStatement(removeBillQuery)) {
                     removeStmt.setInt(1, clientId);
                     removeStmt.setInt(2, meterId);
                     removeStmt.executeUpdate();
                 }
 
-                // Generate receipt
                 StringBuilder receipt = new StringBuilder();
                 receipt.append("\n----- Receipt -----\n")
                        .append("Client ID: ").append(clientId).append("\n")
@@ -866,7 +869,6 @@ public void processPayment(int clientId, int meterId, double paymentAmount, Stri
     }
 }
 
-
 //for displaying payment history of client
 public List<Object[]> getPaymentHistory(int clientID) {
     List<Object[]> paymentHistoryList = new ArrayList<>();
@@ -874,12 +876,10 @@ public List<Object[]> getPaymentHistory(int clientID) {
                    "FROM paymenthistory WHERE clientID = ?";
 
     try (PreparedStatement stmt = connect.prepareStatement(query)) {
-        // Set the clientID parameter in the query
         stmt.setInt(1, clientID);
 
         try (ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                // Retrieve each column's value and store them as an Object array
                 Object[] paymentData = new Object[6];
                 paymentData[0] = rs.getInt("paymentID");
                 paymentData[1] = rs.getDouble("amountPaid");
@@ -902,17 +902,116 @@ public List<Object[]> getPaymentHistory(int clientID) {
         try (PreparedStatement stmt = connect.prepareStatement(query)) {
             stmt.setString(1, newStatus);
             stmt.setInt(2, clientID);
-            int rowsUpdated = stmt.executeUpdate();
-            if (rowsUpdated > 0) {
-                JOptionPane.showMessageDialog(rootPane, "Client status updated successfully.");
-            } else {
-                JOptionPane.showMessageDialog(rootPane, "Failed to update client status.");
-            }
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(rootPane, "Client status updated successfully.");
+
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(rootPane, "Error updating client status: " + e.getMessage());
         }
     }
+
+    public String fetchClientStatus(int clientID) {
+        String query = "SELECT status FROM client WHERE clientID = ?";
+        String clientStatus = null;
+
+        try (PreparedStatement stmt = connect.prepareStatement(query)) {
+            stmt.setInt(1, clientID); // Set the clientID parameter
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    clientStatus = rs.getString("status");
+                } else {
+                    clientStatus = "No status found for this client.";
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error fetching client status: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return clientStatus;
+    }
+    
+    public double getLeakCharge(int clientID) {
+    String query = "SELECT leakCharge FROM bill WHERE clientID = ? ORDER BY lastUpdated DESC LIMIT 1";
+    double leakCharge = 0;
+
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, clientID);
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                leakCharge = rs.getDouble("leakCharge");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error fetching leak charge: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    return leakCharge;
+}
+
+    
+    public double getOverdueCharge(int clientID) {
+    String query = "SELECT overdueCharge FROM bill WHERE clientID = ? ORDER BY lastUpdated DESC LIMIT 1";
+    double overdueCharge = 0;
+
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, clientID);
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                overdueCharge = rs.getDouble("overdueCharge");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error fetching overdue charge: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    return overdueCharge;
+}
+    
+        public double getLeakCharge(int clientID, int meterID) {
+    String query = "SELECT leakCharge FROM bill WHERE clientID = ? AND meterID = ? ORDER BY lastUpdated DESC LIMIT 1";
+    double leakCharge = 0;
+
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, clientID);
+        stmt.setInt(2, meterID);
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                leakCharge = rs.getDouble("leakCharge");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error fetching leak charge: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    return leakCharge;
+}
+
+    
+    public double getOverdueCharge(int clientID, int meterID) {
+    String query = "SELECT overdueCharge FROM bill WHERE clientID = ? AND meterID = ? ORDER BY lastUpdated DESC LIMIT 1";
+    double overdueCharge = 0;
+
+    try (PreparedStatement stmt = connect.prepareStatement(query)) {
+        stmt.setInt(1, clientID);
+        stmt.setInt(2, meterID);
+        try (ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                overdueCharge = rs.getDouble("overdueCharge");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error fetching overdue charge: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    return overdueCharge;
+}
 
 
 

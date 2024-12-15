@@ -61,7 +61,7 @@ public class ClientCommercial extends javax.swing.JFrame {
         meterNameCom = new javax.swing.JTextField();
         addmeterCom = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        comUsage = new javax.swing.JLabel();
         dateCom = new javax.swing.JLabel();
         prevCom = new javax.swing.JLabel();
         currentCom = new javax.swing.JLabel();
@@ -71,12 +71,13 @@ public class ClientCommercial extends javax.swing.JFrame {
         scrollList = new javax.swing.JScrollPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         listCom = new javax.swing.JList<>();
-        billCom = new javax.swing.JLabel();
         paybutton = new javax.swing.JButton();
         paymentCom = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         selectpaymentMethod = new javax.swing.JComboBox<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        billCom = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -112,17 +113,14 @@ public class ClientCommercial extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Meter Name");
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("METER USAGE");
+        comUsage.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        comUsage.setForeground(new java.awt.Color(255, 255, 255));
+        comUsage.setText("METER USAGE");
 
-        dateCom.setForeground(new java.awt.Color(0, 0, 0));
         dateCom.setText("Date Today: ");
 
-        prevCom.setForeground(new java.awt.Color(0, 0, 0));
         prevCom.setText("Previous Reading:");
 
-        currentCom.setForeground(new java.awt.Color(0, 0, 0));
         currentCom.setText("Current Reading:");
 
         switchCom.setText("Start Meter");
@@ -132,7 +130,6 @@ public class ClientCommercial extends javax.swing.JFrame {
             }
         });
 
-        meterName.setForeground(new java.awt.Color(0, 0, 0));
         meterName.setText("Meter Name:");
 
         listCom.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -146,9 +143,6 @@ public class ClientCommercial extends javax.swing.JFrame {
 
         scrollList.setViewportView(jScrollPane1);
 
-        billCom.setForeground(new java.awt.Color(0, 0, 0));
-        billCom.setText("VIEW BILL");
-
         paybutton.setText("PAY BILL");
         paybutton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -156,13 +150,15 @@ public class ClientCommercial extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("INPUT PAYMENT");
 
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("PAYMENT METHOD");
 
         selectpaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Gcash", "Paymaya" }));
+
+        billCom.setFont(new java.awt.Font("Serif", 1, 12)); // NOI18N
+        billCom.setText("VIEW BILL");
+        jScrollPane3.setViewportView(billCom);
 
         javax.swing.GroupLayout paymethodComLayout = new javax.swing.GroupLayout(paymethodCom);
         paymethodCom.setLayout(paymethodComLayout);
@@ -178,7 +174,7 @@ public class ClientCommercial extends javax.swing.JFrame {
                         .addGap(21, 21, 21)
                         .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(switchCom)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comUsage, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dateCom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(prevCom, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
                             .addComponent(currentCom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -200,51 +196,48 @@ public class ClientCommercial extends javax.swing.JFrame {
                         .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSeparator2)
                             .addGroup(paymethodComLayout.createSequentialGroup()
-                                .addComponent(billCom, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(9, 9, 9)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(paymethodComLayout.createSequentialGroup()
-                                        .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(paymethodComLayout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(selectpaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(paymethodComLayout.createSequentialGroup()
-                                                    .addGap(134, 134, 134)
-                                                    .addComponent(paymentCom, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(paymethodComLayout.createSequentialGroup()
-                                                    .addGap(117, 117, 117)
-                                                    .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paymethodComLayout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(paybutton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(113, 113, 113)))))))
+                                        .addGap(113, 113, 113))
+                                    .addGroup(paymethodComLayout.createSequentialGroup()
+                                        .addGap(193, 193, 193)
+                                        .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(paymethodComLayout.createSequentialGroup()
+                                                .addGap(17, 17, 17)
+                                                .addComponent(paymentCom, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(selectpaymentMethod, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)))))))
                 .addGap(24, 24, 24))
         );
         paymethodComLayout.setVerticalGroup(
             paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(paymethodComLayout.createSequentialGroup()
-                .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap()
+                .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(paymethodComLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(paymentCom, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(selectpaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(38, 38, 38)
-                        .addComponent(paybutton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, paymethodComLayout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(32, 32, 32)
+                        .addComponent(paybutton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50))
+                    .addGroup(paymethodComLayout.createSequentialGroup()
                         .addComponent(welcomeCommercial, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(paymethodComLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(paymethodComLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel3)
+                                .addComponent(comUsage)
                                 .addGap(12, 12, 12)
                                 .addComponent(dateCom, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -268,8 +261,8 @@ public class ClientCommercial extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(billCom, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(50, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 21, Short.MAX_VALUE))))
         );
 
         switchCom.setEnabled(false);
@@ -279,7 +272,6 @@ public class ClientCommercial extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(0, 153, 153));
 
         jLabel4.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("PAYMENT HISTORY");
 
         history.setModel(new javax.swing.table.DefaultTableModel(
@@ -339,14 +331,14 @@ public class ClientCommercial extends javax.swing.JFrame {
         sidePanel.setLayout(sidePanelLayout);
         sidePanelLayout.setHorizontalGroup(
             sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sidePanelLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(logoutClient)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(sidePanelLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addComponent(logoutClient)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         sidePanelLayout.setVerticalGroup(
             sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -442,70 +434,89 @@ if (!evt.getValueIsAdjusting()) {
     }//GEN-LAST:event_listComValueChanged
 
     private void switchComActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchComActionPerformed
-    if (listCom.getSelectedValue() == null) {
-        JOptionPane.showMessageDialog(this, "Please select a meter first!", "Error", JOptionPane.ERROR_MESSAGE);
+        int clientID = SharedData.clientID;
+        String status = client.fetchClientStatus(clientID);
+        if(status.equalsIgnoreCase("INACTIVE")){
+            switchCom.setEnabled(false);
+            comUsage.setText("You are inactive, you can't open your meter.");
+        }
+        if (listCom.getSelectedValue() == null) {
+            JOptionPane.showMessageDialog(this, "Please select a meter first!", "Error", JOptionPane.ERROR_MESSAGE);
         return;
-    }
+        }
 
-    String selectedMeter = listCom.getSelectedValue();
-    int selectedMeterID = client.getMeterIDByMeterName(SharedData.clientID, selectedMeter);
+        String selectedMeter = listCom.getSelectedValue();
+        int selectedMeterID = client.getMeterIDByMeterName(SharedData.clientID, selectedMeter);
 
-    if (selectedMeterID <= 0) {
-        JOptionPane.showMessageDialog(this, "Error retrieving meter ID!", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+        if (selectedMeterID <= 0) {
+            JOptionPane.showMessageDialog(this, "Error retrieving meter ID!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
 
-    if (meterTimers.containsKey(selectedMeterID)) { 
-        stopMeter(selectedMeterID);
-        switchCom.setText("Start Meter");
-        JOptionPane.showMessageDialog(this, "Meter stopped!", "Info", JOptionPane.INFORMATION_MESSAGE);
-    } else {
+        if (meterTimers.containsKey(selectedMeterID)) { 
+            stopMeter(selectedMeterID);
+            switchCom.setText("Start Meter");
+            JOptionPane.showMessageDialog(this, "Meter stopped!", "Info", JOptionPane.INFORMATION_MESSAGE);
+        } else {
 
-        startMeter(selectedMeterID);
-        switchCom.setText("Stop Meter");
-        JOptionPane.showMessageDialog(this, "Meter started!", "Info", JOptionPane.INFORMATION_MESSAGE);
-    }
+            startMeter(selectedMeterID);
+            switchCom.setText("Stop Meter");
+            JOptionPane.showMessageDialog(this, "Meter started!", "Info", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_switchComActionPerformed
 
     private void paybuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paybuttonActionPerformed
-
-    String paymentText = paymentCom.getText().trim();
-    if (paymentText.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Please enter a payment amount.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    double paymentAmount;
-    try {
-        paymentAmount = Double.parseDouble(paymentText);
-        if (paymentAmount <= 0) {
-            throw new NumberFormatException();
+        String paymentText = paymentCom.getText().trim();
+        if (paymentText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a payment amount.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Please enter a valid payment amount.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
 
-    String paymentMethod = (String) selectpaymentMethod.getSelectedItem(); // Assuming your combo box is named paymentMethodComboBox
+        double paymentAmount;
+        try {
+            paymentAmount = Double.parseDouble(paymentText);
+            if (paymentAmount <= 0) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid payment amount.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    String selectedMeterName = listCom.getSelectedValue();
-    if (selectedMeterName == null) {
-        JOptionPane.showMessageDialog(this, "Please select a meter first!", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    int meterID = client.getMeterIDByMeterName(SharedData.clientID, selectedMeterName);
+        String paymentMethod = (String) selectpaymentMethod.getSelectedItem();
+        if (paymentMethod == null || paymentMethod.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select a payment method.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
+        String selectedMeterName = listCom.getSelectedValue();
+        if (selectedMeterName == null) {
+            JOptionPane.showMessageDialog(this, "Please select a meter first!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    boolean paymentSuccess = processPayment(SharedData.clientID, meterID, paymentAmount, paymentMethod);
+        int meterID = client.getMeterIDByMeterName(SharedData.clientID, selectedMeterName);
+        if (meterID <= 0) {
+            JOptionPane.showMessageDialog(this, "Invalid meter selected. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    if (paymentSuccess) {
-        JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        paymentCom.setText(""); // Clear the payment input field
-        // Optionally, refresh bill details or meter readings here
-    } else {
-        JOptionPane.showMessageDialog(this, "Payment failed. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
-    }
+        try {
+            boolean paymentSuccess = processPayment(SharedData.clientID, meterID, paymentAmount, paymentMethod);
+
+            if (paymentSuccess) {
+                JOptionPane.showMessageDialog(this, "Payment successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                paymentCom.setText(""); 
+            } else {
+                JOptionPane.showMessageDialog(this, 
+                    "Payment failed. Possible reasons:\n- Insufficient payment\n- No outstanding bill.\nPlease check and try again.", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage(), 
+                                          "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_paybuttonActionPerformed
 
     /**
@@ -539,7 +550,6 @@ private void startMeter(int meterID) {
         client.updateCurrentReading(meterID, readings[1]); 
 
         if (listCom.getSelectedValue() != null && client.getMeterIDByMeterName(SharedData.clientID, listCom.getSelectedValue()) == meterID) {
-            // Format the current reading to two decimal places
             String formattedReading = String.format("%.2f", readings[1]);
             currentCom.setText("Current Reading: " + formattedReading);
         }
@@ -560,52 +570,66 @@ private void stopMeter(int meterID) {
 private boolean processPayment(int clientID, int meterID, double paymentAmount, String selectedMethod) {
     if (client.hasOutstandingBill(clientID, meterID)) {
         double amountDue = client.getAmountDue(clientID, meterID);
+        double leakCharge = client.getLeakCharge(clientID, meterID); 
+        double overdueCharge = client.getOverdueCharge(clientID, meterID); 
+        double totalCharges = leakCharge + overdueCharge;
+        double meterUsed = client.getMeterUsed(meterID); 
 
         if (paymentAmount >= amountDue) {
-            double meterUsed = client.getMeterUsed(meterID);
             client.insertPaymentIntoHistory(clientID, meterID, amountDue, selectedMethod, meterUsed);
-            client.removeBill(clientID, meterID); 
+            client.removeBill(clientID, meterID);
 
             StringBuilder receipt = new StringBuilder();
-            receipt.append("Receipt\n");
-            receipt.append("Client ID: ").append(clientID).append("\n");
-            receipt.append("Meter ID: ").append(meterID).append("\n");
-            receipt.append("Payment Method: ").append(selectedMethod).append("\n");
-            receipt.append("Amount Due: ").append(amountDue).append("\n");
-            receipt.append("Payment Amount: ").append(paymentAmount).append("\n");
+            receipt.append("<html>");
+            receipt.append("<h2>Payment Receipt</h2>");
+            receipt.append("<hr>");
+            receipt.append("<b>Client ID:</b> ").append(clientID).append("<br>");
+            receipt.append("<b>Meter ID:</b> ").append(meterID).append("<br>");
+            receipt.append("<b>Payment Method:</b> ").append(selectedMethod).append("<br>");
+            receipt.append("<b>Amount Due:</b> ").append(String.format("%.2f", amountDue)).append(" pesos<br>");
+            receipt.append("<b>Payment Amount:</b> ").append(String.format("%.2f", paymentAmount)).append(" pesos<br>");
+            receipt.append("<hr>");
+            receipt.append("<b>Breakdown of Charges:</b><br>");
+            receipt.append("  - Leak Charge: ").append(String.format("%.2f", leakCharge)).append(" pesos<br>");
+            receipt.append("  - Overdue Charge: ").append(String.format("%.2f", overdueCharge)).append(" pesos<br>");
+            receipt.append("  - Total Charges: ").append(String.format("%.2f", totalCharges)).append(" pesos<br>");
+            receipt.append("<hr>");
+            receipt.append("<b>Meter Used:</b> ").append(String.format("%.2f", meterUsed)).append(" cubic meters<br>");
 
             if ("Cash".equalsIgnoreCase(selectedMethod)) {
                 double change = paymentAmount - amountDue;
-                receipt.append("Change: ").append(change).append("\n");
+                receipt.append("<b>Change:</b> ").append(String.format("%.2f", change)).append(" pesos<br>");
             }
 
+            receipt.append("</html>");
+
             JOptionPane.showMessageDialog(this, receipt.toString(), "Payment Receipt", JOptionPane.INFORMATION_MESSAGE);
-            return true; 
+            return true;
         } else {
-            JOptionPane.showMessageDialog(this, "Payment amount is insufficient. Amount due: " + amountDue, "Error", JOptionPane.ERROR_MESSAGE);
-            return false; 
+            JOptionPane.showMessageDialog(this, 
+                "Payment amount is insufficient. Amount due: " + String.format("%.2f", amountDue) + " pesos", 
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
     } else {
         JOptionPane.showMessageDialog(this, "No outstanding bill to pay.", "Error", JOptionPane.ERROR_MESSAGE);
-        return false; 
+        return false;
     }
 }
+
 
     private void displayPaymentHistory() {
         int clientID = SharedData.clientID;
         List<Object[]> paymentHistoryList = client.getPaymentHistory(clientID);
 
-        // Column names for the table
         String[] columnNames = {"Payment ID", "Amount Paid", "Payment Method", "Meter Used", "Charges", "Payment Date"};
 
-        // Convert List<Object[]> to 2D array for the table
         Object[][] data = new Object[paymentHistoryList.size()][6];
 
         for (int i = 0; i < paymentHistoryList.size(); i++) {
-            data[i] = paymentHistoryList.get(i);  // Directly assign each row's data
+            data[i] = paymentHistoryList.get(i);  
         }
 
-        // Set the table model with data and column names
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         history.setModel(model);
     }
@@ -651,18 +675,19 @@ private boolean processPayment(int clientID, int meterID, double paymentAmount, 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addmeterCom;
     protected javax.swing.JLabel billCom;
+    private javax.swing.JLabel comUsage;
     private javax.swing.JLabel currentCom;
     private javax.swing.JLabel dateCom;
     private javax.swing.JTable history;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JList<String> listCom;
