@@ -6,7 +6,7 @@ package wbs_2103.src.gui;
 import wbs_2103.src.queries.Admin;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
-import wbs_2103.src.connector.DBConnect;
+import connector.DBConnect;
 import java.sql.PreparedStatement;
 import javax.swing.JOptionPane;
 import java.sql.SQLException;

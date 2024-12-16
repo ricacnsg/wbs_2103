@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
-import wbs_2103.src.connector.DBConnect;
+import connector.DBConnect;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
