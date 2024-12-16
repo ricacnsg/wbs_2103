@@ -6,6 +6,7 @@ package wbs_2103.src.gui;
 import wbs_2103.src.queries.Admin;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -108,6 +109,10 @@ public class AdminUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
+        jPanel10 = new javax.swing.JPanel();
+        complaintLabel = new javax.swing.JLabel();
+        refreshButton = new javax.swing.JButton();
+        ackButton = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -260,15 +265,69 @@ public class AdminUI extends javax.swing.JFrame {
 
         CollectionTab.addTab("Collection", jPanel4);
 
+        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel10.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        complaintLabel.setText("Complain");
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGap(64, 64, 64)
+                .addComponent(complaintLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 513, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(39, Short.MAX_VALUE))
+        );
+        jPanel10Layout.setVerticalGroup(
+            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel10Layout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(complaintLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(45, Short.MAX_VALUE))
+        );
+
+        refreshButton.setText("Refresh");
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButtonActionPerformed(evt);
+            }
+        });
+
+        ackButton.setText("Acknowledge");
+        ackButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ackButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 950, Short.MAX_VALUE)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(152, 152, 152)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(178, Short.MAX_VALUE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(refreshButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(ackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(228, 228, 228))))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 561, Short.MAX_VALUE)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(refreshButton, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                    .addComponent(ackButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(176, Short.MAX_VALUE))
         );
 
         CollectionTab.addTab("complaint", jPanel6);
@@ -318,6 +377,53 @@ public class AdminUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        // TODO add your handling code here:
+        /* try {
+            int adminID = SharedData.adminID;
+            if (adminID == 0) {
+                JOptionPane.showMessageDialog(this, "Please log in to refresh complaint!");
+                return;
+            }
+
+            String[] data = admin.fetchUnacknowledgedComplaint();
+
+            complaintLabel.setText("Client ID: " + data[0] + " | Complaint: " + data[1]);
+        } catch (Exception e) {
+            complaintLabel.setText("");
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Information", JOptionPane.INFORMATION_MESSAGE);
+        }*/
+    }//GEN-LAST:event_refreshButtonActionPerformed
+
+    private void ackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ackButtonActionPerformed
+        // TODO add your handling code here:
+        /* try {
+            int adminID = SharedData.adminID;
+            if (adminID == 0) {
+                JOptionPane.showMessageDialog(this, "Please log in to acknowledge complaint!");
+                return;
+            }
+            
+            String labelText = complaintLabel.getText();
+            if (labelText.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No complaint to acknowledge!", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+
+            String clientIDText = labelText.split("Client ID: ")[1].split(" \\|")[0];
+            int clientID = Integer.parseInt(clientIDText);
+
+
+            admin.acknowledgeComplaint(clientID);
+
+            complaintLabel.setText("");
+            JOptionPane.showMessageDialog(this, "Complaint acknowledged successfully!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }*/
+    }//GEN-LAST:event_ackButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -358,9 +464,12 @@ public class AdminUI extends javax.swing.JFrame {
     private javax.swing.JLabel Collection;
     private javax.swing.JTabbedPane CollectionTab;
     private javax.swing.JTable Monitor;
+    private javax.swing.JButton ackButton;
+    private javax.swing.JLabel complaintLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -370,5 +479,6 @@ public class AdminUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton refreshButton;
     // End of variables declaration//GEN-END:variables
 }
