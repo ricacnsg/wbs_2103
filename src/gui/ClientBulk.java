@@ -68,7 +68,6 @@ public class ClientBulk extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         dateBulk = new javax.swing.JLabel();
-        prevSub = new javax.swing.JLabel();
         currentSub = new javax.swing.JLabel();
         switchCom = new javax.swing.JToggleButton();
         jSeparator2 = new javax.swing.JSeparator();
@@ -98,7 +97,7 @@ public class ClientBulk extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(901, 597));
 
-        tabbedPane.setBackground(new java.awt.Color(102, 102, 102));
+        tabbedPane.setBackground(new java.awt.Color(255, 255, 255));
         tabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 tabbedPaneStateChanged(evt);
@@ -127,8 +126,6 @@ public class ClientBulk extends javax.swing.JFrame {
         jLabel3.setText("METER USAGE");
 
         dateBulk.setText("Date Today: ");
-
-        prevSub.setText("Previous Reading:");
 
         currentSub.setText("Current Reading:");
 
@@ -210,9 +207,7 @@ public class ClientBulk extends javax.swing.JFrame {
                                                     .addComponent(currentMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                     .addComponent(prevMain, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
                                                 .addGap(53, 53, 53)
-                                                .addGroup(BulkPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                    .addComponent(prevSub, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(currentSub, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(currentSub, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                             .addGroup(BulkPaneLayout.createSequentialGroup()
                                                 .addComponent(mainMeterLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -286,14 +281,12 @@ public class ClientBulk extends javax.swing.JFrame {
                             .addComponent(submetername, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(mainMeterLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(BulkPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(prevSub, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(prevMain))
+                        .addGroup(BulkPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(prevMain)
+                            .addComponent(currentSub, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(BulkPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(currentSub, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(currentMain))
-                        .addGap(14, 14, 14)
+                        .addComponent(currentMain)
+                        .addGap(19, 19, 19)
                         .addComponent(switchCom)))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -310,7 +303,7 @@ public class ClientBulk extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(paybuttonBulk, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         switchCom.setEnabled(false);
@@ -465,7 +458,7 @@ public class ClientBulk extends javax.swing.JFrame {
                     double[] readings = client.getSubmeterReadings(submeterID);
 
                     submetername.setText("Submeter Name: " + selectedSubmeterName); 
-                    prevSub.setText("Previous Reading: " + readings[0]); 
+                  //  prevSub.setText("Previous Reading: " + readings[0]); 
                     currentSub.setText("Current Reading: " + readings[1]); 
                     
                     int clientID = SharedData.clientID;
@@ -730,7 +723,6 @@ public class ClientBulk extends javax.swing.JFrame {
     private javax.swing.JTextField paymentField;
     private javax.swing.JComboBox<String> paymethodBulk;
     private javax.swing.JLabel prevMain;
-    private javax.swing.JLabel prevSub;
     private javax.swing.JScrollPane scrollList;
     private javax.swing.JScrollPane scrollPane;
     private javax.swing.JList<String> submeterList;

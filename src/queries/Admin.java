@@ -3,6 +3,7 @@ import java.awt.Component;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import wbs_2103.src.connector.DBConnect;
 import java.util.ArrayList;
@@ -132,7 +133,99 @@ public class Admin {
     }
     return 0;
 }
+      /*
+      public void acknowledgeComplaint(int clientID) throws Exception {
+        String query = "UPDATE complaint SET isAcknowledged = TRUE WHERE clientID = ?";
+        try (PreparedStatement pstmt = connect.prepareStatement(query)) {
+            pstmt.setInt(1, clientID);
+            int rowsUpdated = pstmt.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new Exception("No complaint found for client ID: " + clientID);
+            }
+        } catch (SQLException e) {
+            throw new Exception("Error acknowledging complaint: " + e.getMessage());
+        }
+    }
+*/
       
+      /* public String[] fetchUnacknowledgedComplaint() throws Exception {
+        String query = "SELECT clientID, complainMsg FROM complaint WHERE isAcknowledged = FALSE ORDER BY complaintID ASC LIMIT 1";
+        try (PreparedStatement pstmt = connect.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                String fetchedClientID = String.valueOf(rs.getInt("clientID"));
+                String complaint = rs.getString("complainMsg");
+                return new String[]{fetchedClientID, complaint};
+            } else {
+                throw new Exception("No unacknowledged complaints found.");
+            }
+        } catch (Exception e) {
+            throw new Exception("Error fetching unacknowledged complaint: " + e.getMessage());
+        }
+    }*/
+      
+      public boolean signUp(int generateAdminId, String name, String newUsername,String newPassword) {
+          
+          if (isUsernameTaken(newUsername)){
+             JOptionPane.showMessageDialog(rootPane, "Username already taken! Please choose a different username.", "Error", JOptionPane.ERROR_MESSAGE);
+             return false;
+          }
+          String query = "INSERT INTO admin (name, username, adminpassword) VALUES (?, ?, ?)";
+          try (PreparedStatement stmt = connect.prepareStatement(query)){
+              stmt.setString(1, name);
+              stmt.setString(2, newUsername);
+              stmt.setString(3, newPassword);
+              
+              int rowsInserted = stmt.executeUpdate();
+              
+              if (rowsInserted > 0){
+                  JOptionPane.showMessageDialog(rootPane, "Sign Up Successful! New admin account created.");
+                  return true;
+                  
+              } else {
+                  JOptionPane.showMessageDialog(rootPane, "Failed to create admin account.", "Error", JOptionPane.ERROR_MESSAGE);
+              }
+              
+              
+          } catch (Exception e) {
+              e.printStackTrace();
+              JOptionPane.showMessageDialog(rootPane, "Database Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+          }
+          return false;
+      }
+      
+         public boolean isUsernameTaken(String newUsername) {
+         String query = "SELECT COUNT(*) FROM admin WHERE username = ?";
+         try (PreparedStatement stmt = connect.prepareStatement(query)) {
+             stmt.setString(1, newUsername);
+             ResultSet rs = stmt.executeQuery();
+
+             if (rs.next() && rs.getInt(1) > 0) {
+             return true; 
+        }
+         } catch (Exception e) {
+             e.printStackTrace();
+             JOptionPane.showMessageDialog(rootPane, "Database Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+         }
+         return false; 
+}
+
+         private int generateAdminId(Connection connect){
+            int adminId = 0;
+            String query = "SELECT MAX(adminid) FROM admin";
+            try (PreparedStatement stmt = connect.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()){
+                if (rs.next()) {
+                    adminId = rs.getInt(1) + 1;
+                
+            }
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+        JOptionPane.showMessageDialog(rootPane, "Error generating admin ID: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+           return adminId;
+        }
      
 
 }
