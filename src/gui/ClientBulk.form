@@ -44,7 +44,7 @@
     <Container class="javax.swing.JTabbedPane" name="tabbedPane">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="66" green="66" red="66" type="rgb"/>
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
       </Properties>
       <Events>
@@ -95,10 +95,7 @@
                                                           <Component id="prevMain" pref="145" max="32767" attributes="0"/>
                                                       </Group>
                                                       <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
-                                                      <Group type="103" groupAlignment="1" attributes="0">
-                                                          <Component id="prevSub" min="-2" pref="146" max="-2" attributes="0"/>
-                                                          <Component id="currentSub" min="-2" pref="146" max="-2" attributes="0"/>
-                                                      </Group>
+                                                      <Component id="currentSub" min="-2" pref="146" max="-2" attributes="0"/>
                                                       <EmptySpace max="32767" attributes="0"/>
                                                   </Group>
                                                   <Group type="102" alignment="1" attributes="0">
@@ -202,16 +199,13 @@
                                   <Component id="mainMeterLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="prevSub" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
-                                  <Component id="prevMain" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="prevMain" min="-2" max="-2" attributes="0"/>
+                                  <Component id="currentSub" min="-2" pref="25" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="currentSub" alignment="3" min="-2" pref="25" max="-2" attributes="0"/>
-                                  <Component id="currentMain" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                              <Component id="currentMain" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                               <Component id="switchCom" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -232,7 +226,7 @@
                           </Group>
                           <Component id="jScrollPane1" min="-2" pref="220" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="39" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -284,11 +278,6 @@
             <Component class="javax.swing.JLabel" name="dateBulk">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Date Today: "/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="prevSub">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Previous Reading:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="currentSub">

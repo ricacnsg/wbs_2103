@@ -53,6 +53,8 @@ public class ClientResidential extends javax.swing.JFrame {
         sidePanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         logoutClient = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         tabbedPane = new javax.swing.JTabbedPane();
         ResidentialPanel = new javax.swing.JPanel();
         welcomeLabel = new javax.swing.JLabel();
@@ -70,20 +72,25 @@ public class ClientResidential extends javax.swing.JFrame {
         refresh = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         residentialBill = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         history = new javax.swing.JTable();
-        jLabel2 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         sidePanel.setBackground(new java.awt.Color(0, 153, 153));
         sidePanel.setForeground(new java.awt.Color(0, 153, 153));
+        sidePanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         jLabel1.setText("<html>       CLIENT \nDASHBOARD");
         jLabel1.setToolTipText("");
+        sidePanel.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 17, 131, 44));
 
         logoutClient.setText("LOG OUT");
         logoutClient.addActionListener(new java.awt.event.ActionListener() {
@@ -91,31 +98,17 @@ public class ClientResidential extends javax.swing.JFrame {
                 logoutClientActionPerformed(evt);
             }
         });
+        sidePanel.add(logoutClient, new org.netbeans.lib.awtextra.AbsoluteConstraints(37, 572, -1, 31));
 
-        javax.swing.GroupLayout sidePanelLayout = new javax.swing.GroupLayout(sidePanel);
-        sidePanel.setLayout(sidePanelLayout);
-        sidePanelLayout.setHorizontalGroup(
-            sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sidePanelLayout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(sidePanelLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(logoutClient)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        sidePanelLayout.setVerticalGroup(
-            sidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(sidePanelLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(logoutClient, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
-        );
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wbs_2103/src/icons/website design (1) (2).png"))); // NOI18N
+        jLabel3.setText("jLabel3");
+        sidePanel.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 150, 560));
 
-        tabbedPane.setBackground(new java.awt.Color(102, 102, 102));
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wbs_2103/src/icons/website design (1) (2).png"))); // NOI18N
+        jLabel4.setText("jLabel4");
+        sidePanel.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 560, 150, 100));
+
+        tabbedPane.setBackground(new java.awt.Color(255, 255, 255));
         tabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 tabbedPaneStateChanged(evt);
@@ -123,11 +116,13 @@ public class ClientResidential extends javax.swing.JFrame {
         });
 
         ResidentialPanel.setBackground(new java.awt.Color(0, 204, 204));
+        ResidentialPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         welcomeLabel.setBackground(new java.awt.Color(204, 204, 204));
         welcomeLabel.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
         welcomeLabel.setForeground(new java.awt.Color(255, 255, 255));
         welcomeLabel.setText("WELCOME ");
+        ResidentialPanel.add(welcomeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 423, 59));
 
         switchButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         switchButton.setText("METER SWITCH");
@@ -136,9 +131,12 @@ public class ClientResidential extends javax.swing.JFrame {
                 switchButtonActionPerformed(evt);
             }
         });
+        ResidentialPanel.add(switchButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(551, 84, 128, 32));
 
         residentialUsage.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         residentialUsage.setText("METER USAGE");
+        ResidentialPanel.add(residentialUsage, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 84, 339, -1));
+        ResidentialPanel.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 261, 715, 12));
 
         payButton.setText("PAY BILL");
         payButton.addActionListener(new java.awt.event.ActionListener() {
@@ -146,12 +144,14 @@ public class ClientResidential extends javax.swing.JFrame {
                 payButtonActionPerformed(evt);
             }
         });
+        ResidentialPanel.add(payButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(481, 470, 121, 44));
 
         paymentField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 paymentFieldActionPerformed(evt);
             }
         });
+        ResidentialPanel.add(paymentField, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 326, 207, 40));
 
         paymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Gcash", "Paymaya" }));
         paymentMethod.addActionListener(new java.awt.event.ActionListener() {
@@ -159,19 +159,25 @@ public class ClientResidential extends javax.swing.JFrame {
                 paymentMethodActionPerformed(evt);
             }
         });
+        ResidentialPanel.add(paymentMethod, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 400, 207, 39));
 
         jLabel5.setText("INPUT PAYMENT");
+        ResidentialPanel.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(411, 298, 98, -1));
 
         jLabel6.setText("SELECT PAYMENT METHOD");
+        ResidentialPanel.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(411, 378, 199, -1));
 
         dateTodayLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         dateTodayLabel.setText("Date Today");
+        ResidentialPanel.add(dateTodayLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 122, 199, 22));
 
         currentReadingLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         currentReadingLabel.setText("Current Reading");
+        ResidentialPanel.add(currentReadingLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 196, 199, 32));
 
         previousReadingLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         previousReadingLabel.setText("Previous Reading");
+        ResidentialPanel.add(previousReadingLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 156, 199, 28));
 
         refresh.setText("REFRESH BILL");
         refresh.addActionListener(new java.awt.event.ActionListener() {
@@ -179,102 +185,31 @@ public class ClientResidential extends javax.swing.JFrame {
                 refreshActionPerformed(evt);
             }
         });
+        ResidentialPanel.add(refresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 291, -1, -1));
 
         residentialBill.setFont(new java.awt.Font("Serif", 1, 14)); // NOI18N
         residentialBill.setText("VIEW BILL");
         jScrollPane3.setViewportView(residentialBill);
 
-        javax.swing.GroupLayout ResidentialPanelLayout = new javax.swing.GroupLayout(ResidentialPanel);
-        ResidentialPanel.setLayout(ResidentialPanelLayout);
-        ResidentialPanelLayout.setHorizontalGroup(
-            ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ResidentialPanelLayout.createSequentialGroup()
-                        .addGap(0, 20, Short.MAX_VALUE)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 715, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                        .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                                .addGap(28, 28, 28)
-                                .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(currentReadingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(previousReadingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(dateTodayLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                                .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                                        .addGap(90, 90, 90)
-                                        .addComponent(refresh))
-                                    .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                                        .addGap(28, 28, 28)
-                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(21, 21, 21)
-                                .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                                        .addGap(84, 84, 84)
-                                        .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                                                .addGap(19, 19, 19)
-                                                .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                    .addComponent(paymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(paymentField, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                                    .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                                        .addGap(154, 154, 154)
-                                        .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(welcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 423, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(residentialUsage, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(switchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(62, 62, 62))
-        );
-        ResidentialPanelLayout.setVerticalGroup(
-            ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(welcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19)
-                .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(residentialUsage)
-                    .addComponent(switchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dateTodayLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(previousReadingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(currentReadingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addComponent(refresh))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(ResidentialPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(ResidentialPanelLayout.createSequentialGroup()
-                        .addComponent(paymentField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(paymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31)
-                        .addComponent(payButton, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(27, Short.MAX_VALUE))
-        );
+        ResidentialPanel.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 326, 278, 249));
+
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wbs_2103/src/icons/website design (1) (1).png"))); // NOI18N
+        jLabel7.setText("jLabel7");
+        ResidentialPanel.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 740, 550));
+
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wbs_2103/src/icons/website design (1) (1).png"))); // NOI18N
+        jLabel8.setText("jLabel8");
+        ResidentialPanel.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 550, 740, 80));
 
         tabbedPane.addTab("RESIDENTIAL", ResidentialPanel);
 
         jPanel1.setBackground(new java.awt.Color(0, 153, 153));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel2.setFont(new java.awt.Font("Serif", 1, 48)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(51, 0, 153));
+        jLabel2.setText("PAYMENT HISTORY");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(17, 16, 500, 62));
 
         history.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -289,34 +224,15 @@ public class ClientResidential extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(history);
 
-        jScrollPane2.setViewportView(jScrollPane1);
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 662, -1));
 
-        jLabel2.setFont(new java.awt.Font("Serif", 1, 24)); // NOI18N
-        jLabel2.setText("PAYMENT HISTORY");
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wbs_2103/src/icons/website design (1) (1).png"))); // NOI18N
+        jLabel9.setText("jLabel9");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, 740, 580));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 674, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(36, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(73, 73, 73))
-        );
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/wbs_2103/src/icons/website design (1) (1).png"))); // NOI18N
+        jLabel10.setText("jLabel10");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 556, 740, 70));
 
         tabbedPane.addTab("PAYMENT HISTORY", jPanel1);
 
@@ -572,12 +488,17 @@ private void processPayment() {
     private javax.swing.JLabel dateTodayLabel;
     private javax.swing.JTable history;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
